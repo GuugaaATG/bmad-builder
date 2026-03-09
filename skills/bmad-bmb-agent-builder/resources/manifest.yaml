@@ -1,0 +1,20 @@
+# Agent Builder - Creates BMad agents with personas and optional memory
+
+# Core identification
+bmad-type: bmad-workflow
+bmad-module-name: BMad Builder
+bmad-module-code: bmb
+
+# Phase context
+bmad-phase: anytime
+bmad-required: false
+
+# Execution relationships
+bmad-requires: []
+bmad-prefer-after: []
+bmad-prefer-before: []
+
+
+# Output tracking
+bmad-creates: Agents and Workflows that are skills (folders with skill.md in them)
+bmad-output-location-variable: bmad_builder_output_folder

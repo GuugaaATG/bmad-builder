@@ -1,0 +1,24 @@
+{
+  "code": "bmb",
+  "name": "BMad Builder",
+  "description": "Standard Skill Compliant Factory for BMad Agents, Workflows and Modules",
+  "default_selected": false,
+  "init_intro": "Let's configure the BMad Builder module. This sets up where your custom Agents, Workflows and Test Reports will be stored.",
+  "init_outro": "BMad Builder is configured! Your skill and report output folders are ready. Remember you can test any creations by ensuring the creations are added to your tools skills folder!",
+  "questions": {
+    "bmad_builder_output_folder": {
+      "prompt": "Where should your custom skills (agents and workflows) be saved?",
+      "default": "{output_folder}/skills",
+      "result": "{project-root}/{value}"
+    },
+    "bmad_builder_reports": {
+      "prompt": "Output for Evals, Test, Quality and Planning Reports?",
+      "default": "{output_folder}/reports",
+      "result": "{project-root}/{value}"
+    }
+  },
+  "directories": [
+    "{bmad_builder_output_folder}",
+    "{bmad_builder_reports}"
+  ]
+}

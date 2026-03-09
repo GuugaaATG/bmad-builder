@@ -1,0 +1,166 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BMad Manifest Schema",
+  "description": "Schema for BMad skill/workflow/agent manifest.yaml files",
+
+  "type": "object",
+
+  "properties": {
+    "$schema": {
+      "description": "JSON Schema identifier",
+      "type": "string"
+    },
+    "bmad-type": {
+      "description": "Type of BMad entity",
+      "type": "string",
+      "enum": ["bmad-workflow", "bmad-skill", "bmad-agent"],
+      "bmad-required": ["bmad-workflow", "bmad-skill", "bmad-agent"]
+    },
+
+    "bmad-module-name": {
+      "description": "Human-readable module name",
+      "type": "string"
+    },
+
+    "bmad-module-code": {
+      "description": "Short code for namespacing (kebab-case)",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+
+    "replaces": {
+      "description": "Optional: Replace an existing BMad skill (inherits its metadata)",
+      "type": "string",
+      "minLength": 1
+    },
+
+    "bmad-requires": {
+      "description": "Hard dependencies within a phase sequence - items listed here must complete before dependent items can run",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+
+    "bmad-activation-modes": {
+      "description": "Activation modes supported by this agent",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["interactive", "autonomous"]
+      }
+    },
+
+    "bmad-autonomous-default": {
+      "description": "Default autonomous task invoked when --autonomous is passed without a specific task",
+      "type": "string"
+    },
+
+    "bmad-autonomous-tasks": {
+      "description": "Named autonomous tasks that can be invoked with --autonomous:{task-name}",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Task name (kebab-case, used in --autonomous:{name})",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "display-name": {
+            "description": "Human-readable task name",
+            "type": "string"
+          },
+          "description": {
+            "description": "What this task does",
+            "type": "string"
+          }
+        },
+        "required": ["name", "display-name", "description"],
+        "additionalProperties": false
+      }
+    },
+
+    "bmad-capabilities": {
+      "description": "Internal prompts/capabilities for agents",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Internal prompt name (kebab-case)",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "menu-code": {
+            "description": "2-3 letter code that is presented in menus that can trigger the prompt or skill",
+            "type": "string",
+            "pattern": "^[A-Z]{2,3}$"
+          },
+          "display-name": {
+            "description": "Human-readable name for UI",
+            "type": "string"
+          },
+          "description": {
+            "description": "What this capability does and when to suggest it",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of capability - prompt (internal) or skill (external)",
+            "type": "string",
+            "enum": ["prompt", "skill"]
+          },
+          "phase": {
+            "description": "When this capability applies",
+            "type": "string",
+            "enum": ["init", "always", "on-demand", "planning", "analysis", "design", "development", "testing", "deployment", "anytime"]
+          },
+          "required": {
+            "description": "Is this capability required?",
+            "type": "boolean"
+          },
+          "output": {
+            "description": "What this capability produces",
+            "type": "string"
+          },
+          "output-location-variable": {
+            "description": "Config variable for output location",
+            "type": "string"
+          },
+          "options": {
+            "description": "Additional options or flags",
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["name", "display-name", "description"],
+        "additionalProperties": false
+      }
+    },
+
+    "bmad-agent": {
+      "description": "Agent-specific configuration",
+      "type": "object",
+      "properties": {
+        "persona": {
+          "description": "Agent persona description",
+          "type": "string"
+        },
+        "memory-enabled": {
+          "description": "Does this agent have memory/continuity?",
+          "type": "boolean"
+        },
+        "memory-location-variable": {
+          "description": "Config variable for memory storage location",
+          "type": "string"
+        },
+        "init-prompt": {
+          "description": "Path to init prompt relative to skill folder",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  "required": [],
+  "additionalProperties": false
+}

@@ -4,6 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-7289da?logo=discord&logoColor=white)](https://discord.gg/gk8jAdXWmj)
 
+IMPORTANT NOTE: The BMad Builder is undergoing a massive redesign and transformation to skills. To test the current agent builder, and soon to come workflow builder replacement - copy the 3 skills as is from the skills folder and add them to a project folders tool skill folder. This a still a work in progress. The agent builder works, the bmad-init is unoptimized and an experiment that may become a skill in the core later as a skill based installer option.
+
 **Build More, Architect Dreams... With the BMad Builder!**
 
 BMad Builder is so much more than a skill builder. BMad Method modules support:

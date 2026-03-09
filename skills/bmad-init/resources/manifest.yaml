@@ -1,0 +1,19 @@
+# BMad Init
+
+# Core identification
+bmad-type: bmad-skill
+bmad-module-name: BMad
+bmad-module-code: core
+
+# Phase context
+bmad-phase: anytime
+bmad-required: false
+
+# Execution relationships
+bmad-requires: []
+bmad-prefer-after: []
+bmad-prefer-before: []
+
+# Output tracking
+bmad-creates: resolved config values (JSON response), _bmad/config.yaml, _bmad/user-config.yaml
+bmad-output-location-variable: none

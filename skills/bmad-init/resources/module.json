@@ -1,0 +1,34 @@
+{
+  "code": "core",
+  "name": "BMad Core Module",
+  "description": "Core settings used across all installed bmad skills, workflows, and agents",
+  "init_intro": "BMad Core Configuration\nConfigure the core settings for your BMad installation.\nThese settings will be used across all installed bmad skills, workflows, and agents.",
+  "init_outro": "Core configuration is complete!",
+  "questions": {
+    "user_name": {
+      "user_setting": true,
+      "prompt": "What should agents call you? (Use your name or a team name)",
+      "default": "BMad",
+      "result": "{value}"
+    },
+    "communication_language": {
+      "user_setting": true,
+      "prompt": "What language should agents use when chatting with you?",
+      "default": "English",
+      "result": "{value}"
+    },
+    "document_output_language": {
+      "prompt": "Preferred document output language?",
+      "default": "English",
+      "result": "{value}"
+    },
+    "output_folder": {
+      "prompt": "Where should output files be saved?",
+      "default": "_bmad-output",
+      "result": "{project-root}/{value}"
+    }
+  },
+  "directories": [
+    "{output_folder}"
+  ]
+}
