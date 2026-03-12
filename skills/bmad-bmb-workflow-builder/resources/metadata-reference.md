@@ -1,14 +1,14 @@
-# Module Metadata Reference
+# Manifest Reference
 
-BMad module workflows have a `resources/manifest.yaml` file for help system integration.
+Every BMad skill has a `bmad-manifest.json` at its root. This is the unified format for agents, workflows, and simple skills.
 
-## File Structure
+## File Location
 
 ```
 {skillname}/
-├── SKILL.md              # Lean: just name, description, what it does
-└── resources/
-    └── manifest.yaml     # Help system metadata
+├── SKILL.md              # name, description, workflow content
+├── bmad-manifest.json    # Capabilities, module integration
+└── ...
 ```
 
 ## SKILL.md Frontmatter (Minimal)
@@ -16,115 +16,111 @@ BMad module workflows have a `resources/manifest.yaml` file for help system inte
 ```yaml
 ---
 name: bmad-{modulecode}-{skillname}
-description: What it does, trigger phrases
+description: [5-8 word summary]. [Use when user says 'X' or 'Y'.]
 ---
 ```
 
-## resources/manifest.yaml (Full Metadata)
+## bmad-manifest.json
 
-```yaml
-# Core identification
-bmad-type: bmad-workflow                  # bmad-workflow | bmad-skill
-bmad-module-name: {Module Display Name}   # Full human-readable module name
-bmad-module-code: {modulecode}            # Short identifier (e.g., cis, cool, xyz)
+**NOTE:** Do NOT include `$schema` in generated manifests. The schema is used by validation tooling only — it is not part of the delivered skill.
 
-# Optional: replace an existing BMad skill
-replaces: {skill-name}                    # Optional: Inherits metadata from this skill during bmad-init
-
-# Phase context (inherited if replaces is set, unless overridden)
-bmad-phase: {phase | anytime}             # Which phase it belongs to
-bmad-required: {true | false}             # Is this skill itself required?
-
-# Execution relationships (dependency graph)
-bmad-requires: []                         # Hard: must complete first
-bmad-prefer-after: []                     # Soft: nicer if these ran first
-bmad-prefer-before: []                    # Soft: ideally run before these
-
-# Output tracking
-bmad-creates: {what this creates}         # What artifact/output?
-bmad-output-location-variable: {var | none} # Config variable for output location
+```json
+{
+  "module-code": "bmb",
+  "replaces-skill": "bmad-bmb-original-skill",
+  "has-memory": true,
+  "capabilities": [
+    {
+      "name": "build",
+      "menu-code": "BP",
+      "description": "Builds skills through conversational discovery. Outputs to skill folder.",
+      "supports-autonomous": true,
+      "prompt": "prompts/build-process.md",
+      "phase-name": "design",
+      "after": ["create-requirements"],
+      "before": ["quality-optimize"],
+      "is-required": true,
+      "output-location": "{bmad_builder_output_folder}"
+    },
+    {
+      "name": "validate",
+      "menu-code": "VL",
+      "description": "Runs validation checks and produces quality report.",
+      "supports-autonomous": true
+    }
+  ]
+}
 ```
 
-## Field Explanations
+## Field Reference
 
-| Field | Type | Purpose | Example |
-|-------|------|---------|---------|
-| `bmad-type` | string | Distinguishes workflows from simple skills | `bmad-workflow` |
-| `bmad-module-name` | string | Human-readable module name for UI/docs | "Creative Intelligence Suite" |
-| `bmad-module-code` | string | Short code for namespacing (used in skill name) | `cis`, `cool`, `xyz` |
-| `replaces` | string | Optional: Replace an existing BMad skill (inherits its metadata) | `bmad-bmb-original-workflow` |
-| `bmad-phase` | string | Which phase it belongs to | `planning`, `analysis`, `anytime` |
-| `bmad-required` | boolean | Is this skill itself required? | `true`, `false` |
-| `bmad-requires` | list | Hard dependencies — must complete first | `["skill-a", "skill-b"]` |
-| `bmad-prefer-after` | list | Soft predecessors — nicer if these ran first | `["brainstorming"]` |
-| `bmad-prefer-before` | list | Soft successors — ideally run before these | `["prd", "brief"]` |
-| `bmad-creates` | string | What artifact does this produce? | `bmad agent`, `validation report`, `documentation` |
-| `bmad-output-location-variable` | string | Which config variable controls output? | `bmad_builder_output_folder`, `none` |
+### Top-Level Fields
 
-### The `replaces` Field
+| Field | Type | Required | Purpose |
+|-------|------|----------|---------|
+| `module-code` | string | If module | Short code for namespacing (e.g., `bmb`, `cis`) |
+| `replaces-skill` | string | No | Registered skill name this replaces. Inherits metadata during bmad-init. |
+| `persona` | string | Agents only | Succinct distillation of the agent's essence. **Presence = this is an agent.** |
+| `has-memory` | boolean | No | Whether state persists across sessions via sidecar memory |
 
-When `replaces` is set, the skill inherits all metadata from the replaced skill during `bmad-init`. Any fields explicitly defined in the new skill's `manifest.yaml` override the inherited values.
+### Capability Fields
 
-**Example:**
-```yaml
-# My custom brief workflow
-replaces: bmad-bmb-brief
-bmad-prefer-perform: "Use my custom brief process - includes stakeholder interviews"
-# All other fields (phase, requires, etc.) inherited from bmad-bmb-brief
-```
+| Field | Type | Required | Purpose |
+|-------|------|----------|---------|
+| `name` | string | Yes | Kebab-case identifier |
+| `menu-code` | string | Yes | 2-3 uppercase letter shortcut for menus |
+| `description` | string | Yes | What it does and when to suggest it |
+| `supports-autonomous` | boolean | No | Can run without user interaction |
+| `prompt` | string | No | Relative path to prompt file (internal capability) |
+| `skill-name` | string | No | Registered name of external skill (external capability) |
+| `phase-name` | string | No | Module phase this belongs to |
+| `after` | array | No | Skill names that should run before this capability |
+| `before` | array | No | Skill names this capability should run before |
+| `is-required` | boolean | No | If true, skills in `before` are blocked until this completes |
+| `output-location` | string | No | Where output goes (may use config variables) |
 
-## Standalone Skills vs Module Workflows
+### Three Capability Flavors
 
-```yaml
-# Standalone skill (no module)
-metadata:
-  bmad-type: bmad-skill
+1. **Has `prompt`** — internal capability routed to a prompt file
+2. **Has `skill-name`** — delegates to another registered skill
+3. **Has neither** — SKILL.md handles it directly
 
-# Module workflow
-metadata:
-  bmad-type: bmad-workflow
-  bmad-module-name: My Module
-  bmad-module-code: mm
-  bmad-phase: anytime
-  bmad-sequence: none
-  # ... other module fields
-```
+### The `replaces-skill` Field
 
-## Config Loading Requirement
+When set, the skill inherits metadata from the replaced skill during `bmad-init`. Explicit fields in the new manifest override inherited values.
 
-All module workflows MUST use the `bmad-load-config-vars` skill at startup.
+## Agent vs Workflow vs Skill
 
-See `resources/bmad-module-workflows.md` for the config loading pattern.
+No type field needed — inferred from content:
+- **Has `persona`** → agent
+- **No `persona`** → workflow or skill (distinction is complexity, not manifest structure)
+
+## Config Loading
+
+All module skills MUST use the `bmad-init` skill at startup.
+
+See `resources/complex-workflow-patterns.md` for the config loading pattern.
 
 ## Path Construction Rules — CRITICAL
 
-All paths in BMad workflows MUST use explicit prefixes to ensure tools and LLMs resolve them correctly.
+Never use `{skill-root}`. Only use `{project-root}` for `_bmad` paths.
 
-**Required prefixes:**
-- `{skill-root}` — for skill-internal files (resources, prompts, scripts)
-- `{project-root}` — for project-level artifact paths
+**Three path types:**
+- **Skill-internal** — bare relative paths (no prefix)
+- **Project `_bmad` paths** — always `{project-root}/_bmad/...`
+- **Config variables** — used directly, already contain `{project-root}` in their resolved values
 
-**Correct patterns:**
+**Correct:**
 ```
-{skill-root}/resources/reference.md
-{skill-root}/prompts/stage-one.md
-{skill-root}/scripts/validate.sh
-{project-root}/_bmad/planning/prd.md
-{project-root}/{config_variable}/output.md
-```
-
-**Incorrect patterns — NEVER use:**
-```
-./resources/reference.md           # Relative path fails
-../references/file.md              # Parent directory escape fails
-resources/reference.md             # No prefix fails
-/Users/username/project/file.md    # Absolute path not portable
-{project_root}/_bmad/planning/{prd_location}/file.md  # Double-nested variable
+resources/reference.md                # Skill-internal (bare relative)
+prompts/stage-one.md                  # Skill-internal (bare relative)
+{project-root}/_bmad/planning/prd.md  # Project _bmad path
+{planning_artifacts}/prd.md           # Config var (already has full path)
 ```
 
-**Config-resolved variables:**
-When a config variable like `{planning_artifacts}` resolves to a full path, do NOT prefix it again:
-- ✅ `{planning_artifacts}/prd.md`
-- ❌ `{project_root}/{planning_artifacts}/prd.md`
-
-This rule applies to ALL path references in SKILL.md, prompts, and subagent instructions.
+**Never use:**
+```
+{skill-root}/resources/reference.md   # {skill-root} doesn't exist
+{project-root}/{config_var}/output.md # Double-prefix
+./resources/reference.md              # Relative prefix breaks context changes
+```

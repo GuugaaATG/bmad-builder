@@ -30,13 +30,13 @@ Which would you prefer?
 
 ## Config Reading and Integration
 
-Workflows MUST read config values using the `bmad-load-config-vars` skill.
+Workflows MUST read config values using the `bmad-init` skill.
 
 ### Config Loading Pattern
 
 **Invoke the skill with parameters:**
 ```
-Use bmad-load-config-vars skill:
+Use bmad-init skill:
 - module: {bmad-module-code}
 - vars: user_name:BMad,communication_language:English,document_output_language:English,output_folder:{project-root}/_bmad-output,{output-location-variable}:{default-output-path}
 ```
@@ -51,8 +51,8 @@ The skill returns JSON with config values. Store in memory as `{var_name}` for u
 - `output_folder:{project-root}/_bmad-output`
 
 **Conditionally include:**
-- `document_output_language:English` — ONLY if workflow creates documents (check `bmad-creates` field)
-- `{bmad-output-location-variable}:{default-output-path}` — ONLY if specified in metadata (not `none`)
+- `document_output_language:English` — ONLY if workflow creates documents (check capability `output-location` field)
+- Output location variable from capability `output-location` — ONLY if specified in metadata
 
 **Example for BMB workflow (creates documents, has output var):**
 ```
@@ -75,7 +75,7 @@ vars: user_name:BMad,communication_language:English,output_folder:{project-root}
 ```markdown
 Language: {communication_language}
 Output Language: {document_output_language}  ← ONLY if workflow creates documents
-Output Location: {output-variable}           ← ONLY if bmad-output-location-variable != none
+Output Location: {output-variable}           ← ONLY if capability output-location is defined
 ```
 
 **Use throughout prompts:**
@@ -422,24 +422,12 @@ my-module-workflow/
 ```yaml
 ---
 name: bmad-mymodule-workflow
-description: Complex multi-stage workflow for my module
-metadata:
-  bmad-type: bmad-workflow
-  bmad-module-name: My Module
-  bmad-module-code: mm
-  bmad-phase: anytime
-  bmad-sequence: none
-  bmad-required: false
-  bmad-creates: analysis report
-  bmad-output-location-variable: my_output_folder
+description: Complex multi-stage workflow for my module. Use when user requests to 'run my module workflow' or 'create analysis report'.
 ---
 
 ## Workflow Entry
 
-1. Use bmad-load-config-vars skill:
-   - module: mm
-   - vars: user_name:BMad,communication_language:English,document_output_language:English,output_folder:{project-root}/_bmad-output,my_output_folder:{project-root}/_bmad-output/my-module/
-   Store returned values in memory
+1. Use bmad-init skill (module: mm) — loads user_name, communication_language, document_output_language, output_folder, my_output_folder
 
 2. Ask user for output document path (or suggest {my_output_folder}/analysis-{timestamp}.md)
 

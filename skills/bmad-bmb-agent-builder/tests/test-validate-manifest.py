@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for validate-manifest.py script."""
+"""Tests for manifest.py validate command."""
 
 # /// script
 # requires-python = ">=3.9"
@@ -24,10 +24,10 @@ except ImportError:
     sys.exit(2)
 
 
-# Path to the validate-manifest.py script
-SCRIPT_PATH = Path(__file__).parent.parent / "scripts" / "validate-manifest.py"
+# Path to the manifest.py script
+SCRIPT_PATH = Path(__file__).parent.parent / "scripts" / "manifest.py"
 # Path to the schema
-SCHEMA_PATH = Path(__file__).parent.parent / "scripts" / "manifest-schema.json"
+SCHEMA_PATH = Path(__file__).parent.parent / "bmad-manifest-schema.json"
 
 
 def run_validator(manifest: dict) -> tuple[int, str, str]:
@@ -50,14 +50,13 @@ def run_validator(manifest: dict) -> tuple[int, str, str]:
 def test_valid_manifest():
     """Test validation of a valid manifest."""
     manifest = {
-        "bmad-type": "bmad-agent",
-        "bmad-module-name": "Test Module",
-        "bmad-module-code": "test",
-        "bmad-capabilities": [
+        "persona": "A helpful test agent",
+        "module-name": "Test Module",
+        "module-code": "test",
+        "capabilities": [
             {
                 "name": "test-capability",
                 "menu-code": "TC",
-                "display-name": "Test Capability",
                 "description": "A test capability",
                 "phase": "on-demand",
             },
@@ -89,13 +88,12 @@ def test_invalid_json():
 def test_missing_menu_code():
     """Test that missing menu-code produces a warning."""
     manifest = {
-        "bmad-type": "bmad-agent",
-        "bmad-module-name": "Test Module",
-        "bmad-module-code": "test",
-        "bmad-capabilities": [
+        "persona": "A helpful test agent",
+        "module-name": "Test Module",
+        "module-code": "test",
+        "capabilities": [
             {
                 "name": "test-capability",
-                "display-name": "Test Capability",
                 "description": "A test capability",
             },
         ],
@@ -111,14 +109,13 @@ def test_missing_menu_code():
 def test_invalid_menu_code_format():
     """Test that invalid menu-code format produces a warning."""
     manifest = {
-        "bmad-type": "bmad-agent",
-        "bmad-module-name": "Test Module",
-        "bmad-module-code": "test",
-        "bmad-capabilities": [
+        "persona": "A helpful test agent",
+        "module-name": "Test Module",
+        "module-code": "test",
+        "capabilities": [
             {
                 "name": "test-capability",
                 "menu-code": "t",  # Too short
-                "display-name": "Test Capability",
                 "description": "A test capability",
             },
         ],
@@ -134,14 +131,13 @@ def test_invalid_menu_code_format():
 def test_json_output():
     """Test JSON output format."""
     manifest = {
-        "bmad-type": "bmad-agent",
-        "bmad-module-name": "Test Module",
-        "bmad-module-code": "test",
-        "bmad-capabilities": [
+        "persona": "A helpful test agent",
+        "module-name": "Test Module",
+        "module-code": "test",
+        "capabilities": [
             {
                 "name": "test-capability",
                 "menu-code": "TC",
-                "display-name": "Test Capability",
                 "description": "A test capability",
             },
         ],
@@ -167,12 +163,11 @@ def test_json_output():
         Path(manifest_path).unlink()
 
 
-def test_invalid_bmad_type():
-    """Test that invalid bmad-type produces an error."""
+def test_invalid_manifest_no_persona():
+    """Test that manifest without persona field produces an error."""
     manifest = {
-        "bmad-type": "invalid-type",
-        "bmad-module-name": "Test Module",
-        "bmad-module-code": "test",
+        "module-name": "Test Module",
+        "module-code": "test",
     }
 
     exit_code, stdout, _ = run_validator(manifest)

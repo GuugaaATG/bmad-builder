@@ -79,7 +79,7 @@ Replace all content placeholders with skill-specific values:
 ## Path References
 
 All generated skills use these paths:
-- `resources/manifest.yaml` — Module metadata (if module-based)
+- `bmad-manifest.json` — Module metadata (if module-based)
 - `resources/{reference}.md` — Reference documents loaded on demand
 - `prompts/01-{stage}.md` — Numbered stage prompts (complex workflows)
 - `scripts/` — Python/shell scripts for deterministic operations (if needed)

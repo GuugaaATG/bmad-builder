@@ -6,7 +6,7 @@
 |-------|-------------|---------|
 | `name` | Full skill name (kebab-case) | `bmad-bmb-workflow-builder`, `bmad-validate-json` |
 | `skillName` | Functional name (kebab-case) | `workflow-builder`, `validate-json` |
-| `description` | What it does + trigger phrases | "Use when the user requests to 'build a workflow'..." |
+| `description` | [5-8 word summary]. [Use when user says 'X' or 'Y'.] | "Builds workflows through conversational discovery. Use when the user requests to 'build a workflow' or 'modify a workflow'." |
 | `role-guidance` | Brief expertise primer | "Act as a senior DevOps engineer" |
 | `module-code` | Module code (if module-based) | `bmb`, `cis` |
 
@@ -35,8 +35,7 @@
 | `progression-conditions` | When stages complete | "User approves outline" |
 | `headless-mode` | Supports autonomous? | true/false |
 | `config-variables` | Beyond core vars | `planning_artifacts`, `output_folder` |
-| `output-artifacts` | What it creates (bmad-creates) | "PRD document", "agent skill" |
-| `output-location-variable` | Config var for output | `bmad_builder_output_folder` |
+| `output-artifacts` | What it creates (output-location) | "PRD document", "agent skill" |
 
 ## Overview Section Format
 
@@ -66,9 +65,28 @@ This skill {what it does}. Use when {when to use}. Returns {output format} with 
 
 ## SKILL.md Description Format
 
+The frontmatter `description` is the PRIMARY trigger mechanism — it determines when the AI invokes this skill. Most BMad skills are **explicitly invoked** by name (`/skill-name` or direct request), so descriptions should be conservative to prevent accidental triggering.
+
+**Format:** Two parts, one sentence each:
 ```
-{description of what the skill does}. Use when the user requests to {trigger phrases}.
+[What it does in 5-8 words]. [Use when user says 'specific phrase' or 'specific phrase'.]
 ```
+
+**The trigger clause** uses one of these patterns depending on the skill's activation style:
+- **Explicit invocation (default):** `Use when the user requests to 'create a PRD' or 'edit an existing PRD'.` — Quotes around specific phrases the user would actually say. Conservative — won't fire on casual mentions.
+- **Organic/reactive:** `Trigger when code imports anthropic SDK, or user asks to use Claude API.` — For lightweight skills that should activate on contextual signals, not explicit requests.
+
+**Examples:**
+
+Good (explicit): `Builds workflows and skills through conversational discovery. Use when the user requests to 'build a workflow', 'modify a workflow', or 'quality check workflow'.`
+
+Good (organic): `Initializes BMad project configuration. Trigger when any skill needs module-specific configuration values, or when setting up a new BMad project.`
+
+Bad: `Helps with PRDs and product requirements.` — Too vague, would trigger on any mention of PRD even in passing conversation.
+
+Bad: `Use on any mention of workflows, building, or creating things.` — Over-broad, would hijack unrelated conversations.
+
+**Default to explicit invocation** unless the user specifically describes organic/reactive activation during discovery.
 
 ## Role Guidance Format
 
@@ -76,27 +94,29 @@ Every generated workflow SKILL.md includes a brief role statement in the Overvie
 ```markdown
 Act as {role-guidance}. {brief expertise/approach description}.
 ```
-This is NOT a full persona (no Identity/Communication Style/Principles sections like agents) — just enough prompt priming for the right expertise and tone.
+This provides quick prompt priming for expertise and tone. Workflows may also use full Identity/Communication Style/Principles sections when personality serves the workflow's purpose.
 
 ## Path Rules
 
-**Critical**: All paths must use explicit prefixes.
+**Critical**: Never use `{skill-root}`. Only use `{project-root}` for `_bmad` paths.
 
 ### Skill-Internal Files
-Use `{skill-root}/` prefix:
-- `{skill-root}/resources/reference.md`
-- `{skill-root}/prompts/01-discover.md`
-- `{skill-root}/scripts/validate.py`
+Use bare relative paths (no prefix):
+- `resources/reference.md`
+- `prompts/01-discover.md`
+- `scripts/validate.py`
 
-### Project-Level Artifacts
-Use `{project-root}/` prefix:
+### Project `_bmad` Paths
+Use `{project-root}/_bmad/...`:
 - `{project-root}/_bmad/planning/prd.md`
-- `{project-root}/docs/architecture.md`
+- `{project-root}/_bmad/_memory/{skillName}-sidecar/`
 
 ### Config Variables
-Use directly — they already contain full paths:
+Use directly — they already contain `{project-root}` in their resolved values:
 - `{output_folder}/file.md`
 - `{planning_artifacts}/prd.md`
 
-**Never double-prefix:**
-- `{project-root}/{output_folder}/file.md` (WRONG — double-prefix breaks resolution)
+**Never:**
+- `{skill-root}/anything` (WRONG — `{skill-root}` is never used)
+- `{project-root}/{output_folder}/file.md` (WRONG — double-prefix, config var already has path)
+- `_bmad/planning/prd.md` (WRONG — bare `_bmad` must have `{project-root}` prefix)

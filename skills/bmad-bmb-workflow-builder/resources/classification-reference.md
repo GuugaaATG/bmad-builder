@@ -55,7 +55,7 @@ Classify the skill type based on user requirements. This table is for internal u
 ## Module Context (Orthogonal)
 
 Module context is asked for ALL types:
-- **Module-based:** Part of a BMad module. Uses `bmad-{modulecode}-{skillname}` naming. Has manifest.yaml.
+- **Module-based:** Part of a BMad module. Uses `bmad-{modulecode}-{skillname}` naming. Has bmad-manifest.json.
 - **Standalone:** Independent skill. Uses `bmad-{skillname}` naming.
 
 All workflows use `bmad-init` by default unless explicitly opted out (truly standalone utilities).

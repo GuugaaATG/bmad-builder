@@ -21,7 +21,7 @@ This is an **opinionated, advisory scan**. Findings are suggestions, not errors.
 
 Find and read:
 - `{skill-path}/SKILL.md` — Identity, purpose, role guidance, description
-- `{skill-path}/manifest.yaml` — All stages with dependencies and metadata
+- `{skill-path}/bmad-manifest.json` — All capabilities with dependencies and metadata
 - `{skill-path}/prompts/*.md` — What each stage prompt actually does
 - `{skill-path}/resources/*.md` — Supporting resources and patterns
 - Look for references to external skills in prompts and SKILL.md
@@ -47,19 +47,23 @@ Find and read:
 
 ### 2. Purpose Alignment
 
-**Question:** Does WHAT the skill does match WHY it exists?
+**Question:** Does WHAT the skill does match WHY it exists — and do the execution instructions actually honor the design principles?
 
 | Check | Why It Matters |
 |-------|----------------|
 | Skill's stated purpose matches its actual stages | Misalignment causes user disappointment |
 | Role guidance is reflected in stage behavior | Don't claim "expert analysis" if stages are superficial |
 | Description matches what stages actually deliver | Users rely on descriptions to choose skills |
-| bmad-creates entries align with actual stage outputs | Declared outputs must actually be produced |
+| output-location entries align with actual stage outputs | Declared outputs must actually be produced |
+| **Design rationale honored by execution instructions** | An agent following the instructions must not violate the stated design principles |
+
+**The promises-vs-behavior check:** If the Overview or design rationale states a principle (e.g., "we do X before Y", "we never do Z without W"), trace through the actual execution instructions in each stage and verify they enforce — or at minimum don't contradict — that principle. Implicit instructions ("acknowledge what you received") that would cause an agent to violate a stated principle are the most dangerous misalignment because they look correct on casual review.
 
 **Examples of misalignment:**
 - Skill claims "comprehensive code review" but only has a linting stage
 - Role guidance says "collaborative" but no stages involve user interaction
 - Description says "end-to-end deployment" but stops at build
+- Overview says "understand intent before scanning artifacts" but Stage 1 instructions would cause an agent to read all provided documents immediately
 
 ### 3. Complexity Appropriateness
 
@@ -96,20 +100,22 @@ Find and read:
 
 ### 5. Dependency Graph Logic
 
-**Question:** Are `bmad-requires` and `bmad-prefer-after` dependencies correct and complete?
+**Question:** Are `after`, `before`, and `is-required` dependencies correct and complete?
 
 | Check | Why It Matters |
 |-------|----------------|
-| bmad-requires captures true hard dependencies | Missing hard deps cause execution failures |
-| bmad-prefer-after captures soft ordering preferences | Incorrect ordering degrades quality |
+| `after` captures true input dependencies | Missing deps cause execution failures |
+| `before` captures downstream consumers | Incorrect ordering degrades quality |
+| `is-required` distinguishes hard blocks from nice-to-have ordering | Unnecessary blocks prevent parallelism |
 | No circular dependencies | Execution deadlock |
 | No unnecessary dependencies creating bottlenecks | Slows parallel execution |
-| bmad-creates entries match what stages actually produce | Downstream consumers rely on these declarations |
+| output-location entries match what stages actually produce | Downstream consumers rely on these declarations |
 
 **Dependency patterns to check:**
-- Stage declares `bmad-requires: [X]` but doesn't actually use X's output
-- Stage uses output from Y but doesn't declare `bmad-requires: [Y]`
-- Soft preference declared as hard requirement (or vice versa)
+- Stage declares `after: [X]` but doesn't actually use X's output
+- Stage uses output from Y but doesn't declare `after: [Y]`
+- `is-required` set to true when the dependency is actually a nice-to-have
+- Ordering declared too strictly when parallel execution is possible
 - Linear chain where parallel execution is possible
 
 ### 6. External Skill Integration Coherence
@@ -130,7 +136,7 @@ Find and read:
 1. **Build mental model** of the skill:
    - What is this skill FOR? (purpose, outcomes)
    - What does it ACTUALLY do? (enumerate all stages)
-   - What does it PRODUCE? (bmad-creates, final outputs)
+   - What does it PRODUCE? (output-location, final outputs)
 
 2. **Evaluate flow coherence**:
    - Do stages flow logically?
@@ -170,7 +176,7 @@ Write JSON findings to: `{quality-report-dir}/skill-cohesion-temp.json`
   },
   "findings": [
     {
-      "file": "SKILL.md|manifest.yaml|prompts/{name}.md",
+      "file": "SKILL.md|bmad-manifest.json|prompts/{name}.md",
       "severity": "high|medium|low|suggestion",
       "category": "gap|redundancy|misalignment|opportunity|strength",
       "issue": "Brief description",
@@ -212,13 +218,13 @@ Write JSON findings to: `{quality-report-dir}/skill-cohesion-temp.json`
       "circular_deps": false,
       "unnecessary_bottlenecks": [],
       "missing_dependencies": [],
-      "notes": "Assessment of bmad-requires and bmad-prefer-after correctness"
+      "notes": "Assessment of after/before/is-required correctness"
     },
-    "bmad_creates_alignment": {
+    "output_location_alignment": {
       "score": "aligned|partially-aligned|misaligned",
       "undeclared_outputs": [],
       "declared_but_not_produced": [],
-      "notes": "Do bmad-creates entries match what stages actually produce?"
+      "notes": "Do output-location entries match what stages actually produce?"
     },
     "external_integration": {
       "external_skills_referenced": 0,
@@ -265,7 +271,7 @@ Write JSON findings to: `{quality-report-dir}/skill-cohesion-temp.json`
 ## Process
 
 1. Read SKILL.md to understand purpose and role guidance
-2. Read manifest.yaml to enumerate all stages and dependencies
+2. Read bmad-manifest.json to enumerate all capabilities and dependencies
 3. Read all prompts to understand what each stage actually does
 4. Read resources if available for additional context
 5. Build mental model of the skill as a whole
@@ -280,10 +286,10 @@ Write JSON findings to: `{quality-report-dir}/skill-cohesion-temp.json`
 **Before finalizing, think one level deeper and verify completeness and quality:**
 
 ### Scan Completeness
-- Did I read SKILL.md, manifest.yaml, and ALL prompts?
+- Did I read SKILL.md, bmad-manifest.json, and ALL prompts?
 - Did I build a complete mental model of the skill?
-- Did I evaluate ALL cohesion dimensions (flow, purpose, complexity, completeness, redundancy, dependencies, creates, external, journey)?
-- Did I check bmad-creates alignment with actual stage outputs?
+- Did I evaluate ALL cohesion dimensions (flow, purpose, complexity, completeness, redundancy, dependencies, output-location, external, journey)?
+- Did I check output-location alignment with actual stage outputs?
 
 ### Finding Quality
 - Are "gap" findings truly missing or intentionally out of scope?

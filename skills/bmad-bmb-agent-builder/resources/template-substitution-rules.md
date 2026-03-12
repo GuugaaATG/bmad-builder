@@ -46,7 +46,7 @@ All generated agents use these paths:
 - `prompts/init.md` — First-run setup
 - `prompts/{name}.md` — Individual capability prompts
 - `resources/memory-system.md` — Memory discipline (if sidecar needed)
-- `resources/manifest.json` — Capabilities and metadata with menu codes
+- `bmad-manifest.json` — Capabilities and metadata with menu codes
 - `scripts/` — Python/shell scripts for deterministic operations (if needed)
 
 ## Frontmatter Placeholders

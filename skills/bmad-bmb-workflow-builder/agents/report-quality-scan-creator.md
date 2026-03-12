@@ -5,7 +5,7 @@ You are a master quality engineer tech writer agent QualityReportBot-9001 and yo
 ## Inputs
 
 You will receive:
-- `{agent-path}` — Path to the workflow/skill being validated
+- `{skill-path}` — Path to the workflow/skill being validated
 - `{quality-report-dir}` — Directory containing scanner temp files AND where to write the final report
 
 ## Process
@@ -20,32 +20,25 @@ You will receive:
 
 ## Categories to Organize By
 
-1. **Structural** — Workflow structure, workflow stages, workflow prompts
-2. **Cohesion** — Skill cohesion, persona-stage alignment, overall coherence
-3. **Efficiency** — Token efficiency, outcome focus, workflow efficiency
-4. **Quality** — Path standards, anti-patterns, context optimization
-5. **Scripts** — Script quality, portability, agentic design
-6. **Evals** — Eval format compliance, eval coverage gaps
-7. **Advisory** — Enhancement opportunities (suggestions, not errors)
+1. **Structural** — Workflow structure, workflow stages
+2. **Prompt Craft** — Prompt craft quality (token efficiency, anti-patterns, outcome balance, narrative framing, contextualization)
+3. **Cohesion** — Skill cohesion, persona-stage alignment, overall coherence
+4. **Efficiency** — Workflow efficiency, context optimization
+5. **Quality** — Path standards
+6. **Scripts** — Script quality, portability, agentic design
+7. **Creative** — Edge-case discoveries, experience gaps, delight opportunities, assumption risks (advisory — suggestions, not errors)
 
-## Scanner Sources (14 Scanners)
+## Scanner Sources (7 Scanners)
 
 | Scanner | Temp File | Category |
 |---------|-----------|----------|
-| workflow-structure | workflow-structure-temp.json | Structural |
-| workflow-stages | workflow-stages-temp.json | Structural |
-| workflow-prompts | workflow-prompts-temp.json | Structural |
+| workflow-integrity | workflow-integrity-temp.json | Structural |
+| prompt-craft | prompt-craft-temp.json | Prompt Craft |
 | skill-cohesion | skill-cohesion-temp.json | Cohesion |
-| token-efficiency | token-efficiency-temp.json | Efficiency |
-| outcome-focus | outcome-focus-temp.json | Efficiency |
-| workflow-efficiency | workflow-efficiency-temp.json | Efficiency |
+| execution-efficiency | execution-efficiency-temp.json | Efficiency |
 | path-standards | path-standards-temp.json | Quality |
-| anti-patterns | anti-patterns-temp.json | Quality |
-| context-optimization | context-optimization-temp.json | Quality |
 | scripts | scripts-temp.json | Scripts |
-| eval-format | eval-format-temp.json | Evals |
-| eval-coverage | eval-coverage-temp.json | Evals |
-| enhancement-opportunities | enhancement-opportunities-temp.json | Advisory |
+| enhancement-opportunities | enhancement-opportunities-temp.json | Creative |
 
 ## Severity Order Within Categories
 
@@ -57,7 +50,7 @@ CRITICAL → HIGH → MEDIUM → LOW
 # Quality Report: {Workflow/Skill Name}
 
 **Scanned:** {timestamp}
-**Workflow Path:** {agent-path}
+**Skill Path:** {skill-path}
 **Report:** {output-file}
 **Performed By** QualityReportBot-9001 and {user_name}
 
@@ -72,12 +65,12 @@ CRITICAL → HIGH → MEDIUM → LOW
 | Category | Critical | High | Medium | Low |
 |----------|----------|------|--------|-----|
 | Structural | {n} | {n} | {n} | {n} |
+| Prompt Craft | {n} | {n} | {n} | {n} |
 | Cohesion | {n} | {n} | {n} | {n} |
 | Efficiency | {n} | {n} | {n} | {n} |
 | Quality | {n} | {n} | {n} | {n} |
 | Scripts | {n} | {n} | {n} | {n} |
-| Evals | {n} | {n} | {n} | {n} |
-| Advisory | — | — | {n} | {n} |
+| Creative | — | — | {n} | {n} |
 
 ---
 
@@ -105,23 +98,23 @@ CRITICAL → HIGH → MEDIUM → LOW
 **Low Priority (Optional)**
 {if any}
 
-### 2. Cohesion
+### 2. Prompt Craft
 {repeat pattern above}
 
-### 3. Efficiency
+### 3. Cohesion
 {repeat pattern above}
 
-### 4. Quality
+### 4. Efficiency
 {repeat pattern above}
 
-### 5. Scripts
+### 5. Quality
 {repeat pattern above}
 
-### 6. Evals
+### 6. Scripts
 {repeat pattern above}
 
-### 7. Advisory (Enhancement Opportunities)
-{list opportunities by impact, no severity — these are suggestions not errors}
+### 7. Creative (Edge-Case & Experience Innovation)
+{list by impact — these are creative suggestions, not errors. Include user journey insights and the boldest practical idea}
 
 ---
 
@@ -133,14 +126,14 @@ CRITICAL → HIGH → MEDIUM → LOW
 
 ## Optimization Opportunities
 
-**Token Efficiency:**
-{findings related to token savings}
+**Prompt Craft:**
+{findings related to prompt quality, contextualization, and token efficiency}
 
 **Performance:**
-{findings related to execution speed}
+{findings related to execution speed and workflow efficiency}
 
 **Maintainability:**
-{findings related to workflow structure}
+{findings related to workflow structure and composability}
 
 ---
 
@@ -172,12 +165,12 @@ Return JSON:
   },
   "by_category": {
     "structural": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+    "prompt_craft": {"critical": 0, "high": 0, "medium": 0, "low": 0},
     "cohesion": {"critical": 0, "high": 0, "medium": 0, "low": 0},
     "efficiency": {"critical": 0, "high": 0, "medium": 0, "low": 0},
     "quality": {"critical": 0, "high": 0, "medium": 0, "low": 0},
     "scripts": {"critical": 0, "high": 0, "medium": 0, "low": 0},
-    "evals": {"critical": 0, "high": 0, "medium": 0, "low": 0},
-    "advisory": {"count": 0}
+    "creative": {"count": 0}
   },
   "high_impact_quick_wins": [
     {"issue": "description", "file": "location", "effort": "low"}
@@ -191,5 +184,5 @@ Return JSON:
 - If the same issue is found in multiple files, list it once with all affected files
 - Preserve all CRITICAL and HIGH severity findings — these indicate broken functionality
 - MEDIUM and LOW can be consolidated if they're similar
-- Advisory/enhancement opportunities are not "issues" — they're suggestions, so categorize separately
+- Creative findings are not "issues" — they're imaginative suggestions for edge cases and experience improvements, so categorize separately
 - Report output path is `{quality-report-dir}/quality-report.md` (fixed name, not timestamped)

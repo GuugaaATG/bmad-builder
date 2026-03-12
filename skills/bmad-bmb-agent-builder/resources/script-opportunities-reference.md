@@ -37,7 +37,7 @@ Scripts validate structure and syntax (deterministic). Prompts evaluate semantic
 
 ### 2. Manifest Schema Validator
 
-**Status:** ✅ Already exists at `scripts/validate-manifest.py`
+**Status:** ✅ Already exists at `scripts/manifest.py` (create, add-capability, update, read, validate)
 
 **Enhancement opportunities:**
 - Add `--agent-path` flag for auto-discovery
@@ -56,9 +56,9 @@ Scripts validate structure and syntax (deterministic). Prompts evaluate semantic
 **Checks:**
 ```bash
 # Use grep with regex:
-grep -r '{if-\w\+}' {agent-path}/
-grep -r '{/if-\w\+}' {agent-path}/
-grep -rE '\{[A-Z][a-zA-Z]+\}' {agent-path}/  # camelCase placeholders
+grep -r '{if-\w\+}' {skill-path}/
+grep -r '{/if-\w\+}' {skill-path}/
+grep -rE '\{[A-Z][a-zA-Z]+\}' {skill-path}/  # camelCase placeholders
 ```
 
 **Output:** JSON with file path, line number, artifact type
@@ -79,7 +79,7 @@ grep -rE '\{[A-Z][a-zA-Z]+\}' {agent-path}/  # camelCase placeholders
 - ## Read Access section exists
 - ## Write Access section exists
 - ## Deny Zones section exists (can be empty)
-- Paths use placeholders correctly ({project-root}, etc.)
+- Paths use placeholders correctly ({project-root} for _bmad paths, relative for skill-internal, no {skill-root})
 ```
 
 **Output:** Structured JSON of read/write/deny zones
@@ -90,7 +90,7 @@ grep -rE '\{[A-Z][a-zA-Z]+\}' {agent-path}/  # camelCase placeholders
 
 ### 5. Prompt Frontmatter Comparator
 
-**What:** Compare prompt file frontmatter against manifest.json
+**What:** Compare prompt file frontmatter against bmad-manifest.json
 
 **Why:** Capability misalignment causes runtime errors
 
@@ -105,7 +105,7 @@ grep -rE '\{[A-Z][a-zA-Z]+\}' {agent-path}/  # camelCase placeholders
 
 **Output:** JSON with mismatches, missing files
 
-**Implementation:** Python, reads manifest.json and all .md files in prompts/
+**Implementation:** Python, reads bmad-manifest.json and all .md files in prompts/
 
 ---
 
@@ -139,7 +139,7 @@ grep -rE '\{[A-Z][a-zA-Z]+\}' {agent-path}/  # camelCase placeholders
 
 **Checks:**
 ```python
-# Parse manifest.json for external skills
+# Parse bmad-manifest.json for external skills
 # Parse SKILL.md for skill invocation patterns
 # Build dependency graph
 ```

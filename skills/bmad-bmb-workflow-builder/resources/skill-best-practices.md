@@ -1,166 +1,28 @@
 # Skill Authoring Best Practices
 
-Write effective Skills that Claude discovers and uses successfully.
+Practical patterns for writing effective BMad skills. For field definitions and description format, see `resources/standard-fields.md`. For quality dimensions, see `resources/quality-dimensions.md`.
 
----
+## Core Principle: Informed Autonomy
 
-**Goal**: Concise, well-structured, tested Skills. Context window is shared with system prompt, conversation history, and other Skills—minimize tokens without losing clarity.
+Give the executing agent enough context to make good judgment calls — not just enough to follow steps. The right test for every piece of content is: "Would the agent make *better decisions* with this context?" If yes, keep it. If it's genuinely redundant or mechanical, cut it.
 
-## Contents
-
-1. [Core Principles](#core-principles) — Conciseness, freedom levels
-2. [Skill Structure](#skill-structure) — Frontmatter, naming, descriptions, progressive disclosure
-3. [Workflows](#workflows) — Checklists, feedback loops
-4. [Content Guidelines](#content-guidelines) — Time-sensitivity, terminology
-5. [Common Patterns](#common-patterns) — Templates, examples, conditional workflows
-6. [Evaluation](#evaluation) — Build evals first, observe navigation
-7. [Anti-Patterns](#anti-patterns) — What to avoid
-8. [Skills with Code](#skills-with-code) — Error handling, utilities, MCP tools
-
-## Core Principles
-
-### 1. Conciseness
-
-**Default**: Claude is smart. Only add what it doesn't know.
-
-**Challenge every paragraph**: "Would the agent do the wrong thing without this?" If no, delete it.
-
-| Bad (verbose, ~150 tokens) | Good (concise, ~50 tokens) |
-|----------------------------|----------------------------|
-| "PDF files contain text and images. You'll need a library. pdfplumber is recommended because..." | "Use pdfplumber for text extraction:\n```python\nimport pdfplumber\nwith pdfplumber.open('f.pdf') as pdf:\n    text = pdf.pages[0].extract_text()\n```" |
-
-### 2. Freedom Levels
+## Freedom Levels
 
 Match specificity to task fragility:
 
 | Freedom | When to Use | Example |
 |---------|-------------|---------|
-| **High** (text instructions) | Multiple valid approaches, context-dependent | "1. Analyze structure, 2. Check bugs, 3. Suggest improvements" |
+| **High** (text instructions) | Multiple valid approaches, context-dependent | "Analyze structure, check for issues, suggest improvements" |
 | **Medium** (pseudocode/templates) | Preferred pattern exists, some variation OK | `def generate_report(data, format="markdown"):` |
 | **Low** (exact scripts) | Fragile operations, consistency critical | `python scripts/migrate.py --verify --backup` (do not modify) |
 
 **Analogy**: Narrow bridge with cliffs = low freedom. Open field = high freedom.
-
-## Skill Structure
-
-### Frontmatter Requirements
-
-```yaml
----
-name: processing-pdfs  # max 64 chars must match folder name the skill is in
-description: Extract text/tables from PDFs, fill forms, merge docs. Use when user mentions PDFs, forms, or document extraction.  # max 1024 chars no special characters
----
-```
-
-### Naming
-
-**Prefer gerund form**: `processing-pdfs`, `analyzing-spreadsheets`, `managing-databases`
-
-**Avoid**: `helper`, `utils`, `tools`, vague names like `documents` or `data`
-
-### Description Rules
-
-- **Third person only**: "Processes Excel files" ✓ / "I can help process files" ✗
-- **Include triggers**: what it does + when to use it
-- **Specific terms**: "Extract text from PDF files. Use when user mentions PDFs, forms, or document extraction."
-
-### Progressive Disclosure
-
-Keep SKILL.md well under 500 lines. Split content into separate folder files. If skill.md has alternate large paths in the SKILL.md, consider choosing path and routing to a prompts folder:
-
-```
-pdf-extractor/
-├── SKILL.md          # Main (loaded when triggered)
-├── prompts/do-x.md             # Skills Routes to optional path do-x
-├── prompts/do-y.md             # Skills Routes to optional path do-y
-├── references/reference.md      # API reference
-├── references/FORMS.md          # Form guide (loaded as needed)
-└── references/examples.md       # Usage examples
-```
-
-**Patterns**:
-1. **High-level guide**: SKILL.md links to topic-specific files
-2. **Domain-specific**: `references/finance.md`, `references/sales.md` — load only relevant domain
-3. **Conditional details**: Basic in SKILL.md, link to advanced topics
-
-**Reference depth**: Max 1 level from SKILL.md. Avoid chains like `SKILL.md → advanced.md → details.md`.
-
-**Long files**: Add TOC for files >100 lines:
-
-```markdown
-## Contents
-- Authentication
-- Core methods (create, read, update, delete)
-- Advanced features
-```
-
-## Workflows
-
-### Checklist Pattern
-
-For multi-step tasks, provide copy-able checklist and use task tool to track progress:
-
-```markdown
-## Research workflow
-
-Copy and track progress with task tool:
-```
-- [ ] Step 1: Read source documents
-- [ ] Step 2: Identify themes
-- [ ] Step 3: Cross-reference claims
-- [ ] Step 4: Create summary
-- [ ] Step 5: Verify citations
-```
-
-**Step 1: Read sources**
-Review each document in `sources/`. Note arguments and evidence.
-
-**Step 2: Identify themes**
-Find patterns. Where do sources agree/disagree?
-```
-
-### Feedback Loops
-
-**Pattern**: Run validator → fix errors → repeat
-
-```markdown
-1. Draft content following STYLE_GUIDE.md
-2. Validate: `python scripts/validate.py`
-3. If fails: fix errors, re-validate
-4. Only proceed when validation passes
-5. Finalize
-```
-
-## Content Guidelines
-
-### Avoid Time-Sensitivity
-
-**Bad**: "Before August 2025 use old API, after use new API"
-
-**Good**:
-
-```markdown
-## Current method
-Use v2: `api.example.com/v2/messages`
-
-## Old patterns
-<details><summary>Legacy v1 (deprecated 2025-08)</summary>
-`api.example.com/v1/messages` — no longer supported
-</details>
-```
-
-### Consistent Terminology
-
-Choose one term per concept:
-- ✓ Always "API endpoint", "field", "extract"
-- ✗ Don't mix "URL"/"API route"/"path", "box"/"element", "pull"/"retrieve"
 
 ## Common Patterns
 
 ### Template Pattern
 
 **Strict** (must follow exactly):
-
 ````markdown
 ## Report structure
 ALWAYS use this template:
@@ -170,12 +32,10 @@ ALWAYS use this template:
 [One paragraph]
 ## Findings
 - Finding 1 with data
-- Finding 2 with data
 ```
 ````
 
 **Flexible** (adapt as needed):
-
 ````markdown
 Here's a sensible default, use judgment:
 ```markdown
@@ -189,27 +49,11 @@ Adapt based on context.
 ### Examples Pattern
 
 Input/output pairs show expected style:
-
 ````markdown
 ## Commit message format
-
 **Example 1:**
 Input: "Added user authentication with JWT tokens"
-Output:
-```
-feat(auth): implement JWT-based authentication
-Add login endpoint and token validation middleware
-```
-
-**Example 2:**
-Input: "Fixed bug where dates displayed incorrectly"
-Output:
-```
-fix(reports): correct date formatting in timezone conversion
-Use UTC timestamps consistently
-```
-
-Follow: type(scope): brief description, then details.
+Output: `feat(auth): implement JWT-based authentication`
 ````
 
 ### Conditional Workflow
@@ -218,146 +62,157 @@ Follow: type(scope): brief description, then details.
 1. Determine modification type:
    **Creating new?** → Creation workflow
    **Editing existing?** → Editing workflow
-
-2. Creation: Use docx-js, build from scratch
-3. Editing: Unpack, modify XML, validate, repack
 ```
 
-## Evaluation
+### Soft Gate Elicitation
 
-### Build Evaluations First
+For guided/interactive workflows, use "anything else?" soft gates at natural transition points instead of hard menus. This pattern draws out information users didn't know they had:
 
-**Before** extensive documentation, create evaluations to identify real gaps:
-
-1. Run Claude on representative tasks without Skill
-2. Document specific failures
-3. Create 3-5 scenarios testing those gaps
-4. Establish baseline
-5. Write minimal instructions to pass
-6. Iterate
-
-**Evaluation structure**:
-
-```json
-{
-  "skills": ["pdf-processing"],
-  "query": "Extract text from this PDF",
-  "files": ["test.pdf"],
-  "expected_behavior": [
-    "Reads PDF using appropriate library",
-    "Extracts text from all pages",
-    "Saves to output.txt"
-  ]
-}
+```markdown
+## After completing a discovery section:
+Present what you've captured so far, then:
+"Anything else you'd like to add, or shall we move on?"
 ```
 
-### Observe Navigation Patterns
+**Why it works:** Users almost always remember one more thing when given a graceful exit ramp rather than a hard stop. The low-pressure phrasing invites contribution without demanding it. This consistently produces richer, more complete artifacts than rigid section-by-section questioning.
 
-Watch for:
-- **Unexpected exploration paths** → structure unclear
-- **Missed connections** → links need to be more explicit
-- **Overreliance on sections** → move to SKILL.md
-- **Ignored content** → unnecessary or poorly signaled
+**When to use:** Any guided workflow with collaborative discovery — product briefs, requirements gathering, design reviews, brainstorming synthesis. Use at every natural transition between topics or sections.
 
-## Anti-Patterns
+**When NOT to use:** Autonomous/headless execution, or steps where additional input would cause scope creep rather than enrich the output.
 
-| Anti-Pattern | Solution |
-|--------------|----------|
-| Windows paths (`\`) | Use forward slashes (`/`) — cross-platform |
-| Too many options | Provide one default with escape hatch for edge cases |
-| Time-sensitive content | Use "old patterns" collapsible section |
-| Inconsistent terminology | Choose one term per concept, stick to it |
-| Deep nesting (A→B→C) | Keep references 1 level from SKILL.md |
+### Intent-Before-Ingestion
 
-## Skills with Code
+Never scan artifacts, documents, or project context until you understand WHY the user is here. Scanning without purpose produces noise, not signal.
 
-### Solve, Don't Punt
-
-Handle errors explicitly:
-
-```python
-# Good
-def process_file(path):
-    try:
-        return open(path).read()
-    except FileNotFoundError:
-        print(f"File {path} not found, creating default")
-        with open(path, "w") as f:
-            f.write("")
-        return ""
-
-# Bad
-def process_file(path):
-    return open(path).read()  # Let Claude figure it out
+```markdown
+## On activation:
+1. Greet and understand intent — what is this about?
+2. Accept whatever inputs the user offers
+3. Ask if they have additional documents or context
+4. ONLY THEN scan artifacts, scoped to relevance
 ```
 
-### Document Constants
+**Why it works:** Without knowing what the user wants, you can't judge what's relevant in a 100-page research doc vs a brainstorming report. Intent gives you the filter. Without it, scanning is a fool's errand.
 
-Avoid "voodoo constants":
+**When to use:** Any workflow that ingests documents, project context, or external data as part of its process.
 
-```python
-# Good
-# HTTP requests typically complete within 30 seconds
-REQUEST_TIMEOUT = 30
-# Three retries balances reliability vs speed
-MAX_RETRIES = 3
+### Capture-Don't-Interrupt
 
-# Bad
-TIMEOUT = 47  # Why 47?
-RETRIES = 5
+When users provide information beyond the current scope (e.g., dropping requirements during a product brief, mentioning platforms during vision discovery), capture it silently for later use rather than redirecting or stopping them.
+
+```markdown
+## During discovery:
+If user provides out-of-scope but valuable info:
+- Capture it (notes, structured aside, addendum bucket)
+- Don't interrupt their flow
+- Use it later in the appropriate stage or output
 ```
 
-### Utility Scripts
+**Why it works:** Users in creative flow will share their best insights unprompted. Interrupting to say "we'll cover that later" kills momentum and may lose the insight entirely. Capture everything, distill later.
 
-**Benefits**: More reliable, save tokens, save time, ensure consistency
+**When to use:** Any collaborative discovery workflow where the user is brainstorming, explaining, or brain-dumping.
 
-**Make intent clear**:
-- "Run `analyze_form.py` to extract fields" (execute)
-- "See `analyze_form.py` for extraction algorithm" (read as reference)
+### Dual-Output: Human Artifact + LLM Distillate
+
+Any artifact-producing workflow can output two complementary documents: a polished human-facing artifact AND a token-conscious, structured distillate optimized for downstream LLM consumption.
+
+```markdown
+## Output strategy:
+1. Primary: Human-facing document (exec summary, report, brief)
+2. Optional: LLM distillate — dense, structured, token-efficient
+   - Captures overflow that doesn't belong in the human doc
+   - Rejected ideas (so downstream doesn't re-propose them)
+   - Detail bullets with just enough context to stand alone
+   - Designed to be loaded as context for the next workflow
+```
+
+**Why it works:** Human docs are concise by design — they can't carry all the detail surfaced during discovery. But that detail has value for downstream LLM workflows (PRD creation, architecture design, etc.). The distillate bridges the gap without bloating the primary artifact.
+
+**When to use:** Any workflow producing documents that feed into subsequent LLM workflows. The distillate is always optional — offered to the user, not forced.
+
+### Parallel Review Lenses
+
+Before finalizing any artifact, fan out multiple reviewers with different perspectives to catch blind spots the builder/facilitator missed.
+
+```markdown
+## Near completion:
+Fan out 2-3 review subagents in parallel:
+- Skeptic: "What's missing? What assumptions are untested?"
+- Opportunity Spotter: "What adjacent value? What angles?"
+- Contextual Reviewer: LLM picks the best third lens
+  (e.g., "regulatory risk" for healthtech, "DX critic" for devtools)
+
+Graceful degradation: If subagents unavailable,
+main agent does a single critical self-review pass.
+```
+
+**Why it works:** A single perspective — even an expert one — has blind spots. Multiple lenses surface issues and opportunities that no single reviewer would catch. The contextually-chosen third lens ensures domain-specific concerns aren't missed.
+
+**When to use:** Any workflow producing a significant artifact (briefs, PRDs, designs, architecture docs). The review step is lightweight but high-value.
+
+### Three-Mode Architecture (Guided / Yolo / Autonomous)
+
+For interactive workflows, offer three execution modes that match different user contexts:
+
+| Mode | Trigger | Behavior |
+|------|---------|----------|
+| **Guided** | Default | Section-by-section with soft gates. Drafts from what it knows, questions what it doesn't. |
+| **Yolo** | `--yolo` or "just draft it" | Ingests everything, drafts complete artifact upfront, then walks user through refinement. |
+| **Autonomous** | `--autonomous` / `-A` | Headless. Takes inputs, produces artifact, no interaction. |
+
+**Why it works:** Not every user wants the same experience. A first-timer needs guided discovery. A repeat user with clear inputs wants yolo. A pipeline wants autonomous. Same workflow, three entry points.
+
+**When to use:** Any facilitative workflow that produces an artifact. Not all workflows need all three — but considering them during design prevents painting yourself into a single interaction model.
+
+### Graceful Degradation
+
+Every subagent-dependent feature should have a fallback path. If the platform doesn't support parallel subagents (or subagents at all), the workflow must still progress.
+
+```markdown
+## Subagent-dependent step:
+Try: Fan out subagents in parallel
+Fallback: Main agent performs the work sequentially
+Never: Block the workflow because a subagent feature is unavailable
+```
+
+**Why it works:** Skills run across different platforms, models, and configurations. A skill that hard-fails without subagents is fragile. A skill that gracefully falls back to sequential processing is robust everywhere.
+
+**When to use:** Any workflow that uses subagents for research, review, or parallel processing.
 
 ### Verifiable Intermediate Outputs
 
-For complex/open-ended tasks: plan → validate → execute → verify
+For complex tasks: plan → validate → execute → verify
 
-**Example**: Update 50 PDF form fields from spreadsheet
-1. Analyze form structure
+1. Analyze inputs
 2. **Create** `changes.json` with planned updates
-3. **Validate** `changes.json` with script
+3. **Validate** with script before executing
 4. Execute changes
 5. Verify output
 
-**Benefits**: Catches errors early, machine-verifiable, reversible planning, clear debugging
+Benefits: catches errors early, machine-verifiable, reversible planning.
 
-### Package Dependencies
+## Writing Guidelines
 
-- **claude.ai**: Can install npm/PyPI packages, pull from GitHub
-- **Claude API**: No network, no runtime package installation
+- **Consistent terminology** — choose one term per concept, stick to it
+- **Third person** in descriptions — "Processes files" not "I help process files"
+- **Descriptive file names** — `form_validation_rules.md` not `doc2.md`
+- **Forward slashes** in all paths — cross-platform
+- **One level deep** for reference files — SKILL.md → reference.md, never SKILL.md → A.md → B.md
+- **TOC for long files** — add table of contents for files >100 lines
 
-List required packages in SKILL.md. Verify availability in code execution environment.
+## Anti-Patterns
 
-### Runtime Environment
+| Anti-Pattern | Fix |
+|---|---|
+| Too many options upfront | One default with escape hatch for edge cases |
+| Deep reference nesting (A→B→C) | Keep references 1 level from SKILL.md |
+| Inconsistent terminology | Choose one term per concept |
+| Vague file names | Name by content, not sequence |
+| Scripts that classify meaning via regex | Intelligence belongs in prompts, not scripts |
 
-**How Claude accesses Skills**:
-1. Metadata (name/description) pre-loaded at startup
-2. Files read on-demand via bash Read tools
-3. Scripts executed without loading contents
-4. No context penalty for files until accessed
+## Scripts in Skills
 
-**Implications**:
-- Use forward slashes in paths
-- Name files descriptively: `form_validation_rules.md` not `doc2.md`
-- Organize by domain: `references/finance.md`, `references/sales.md`
-- Bundle comprehensive resources — no penalty until accessed
-- Prefer scripts for deterministic operations
-- Test file access patterns
-
-### MCP Tool References
-
-Use fully qualified names: `ServerName:tool_name`
-
-```markdown
-Use BigQuery:bigquery_schema to retrieve schemas.
-Use GitHub:create_issue to create issues.
-```
-
-Without server prefix, tool lookup may fail.
+- **Execute vs reference** — "Run `analyze.py` to extract fields" (execute) vs "See `analyze.py` for the algorithm" (read)
+- **Document constants** — explain why `TIMEOUT = 30`, not just what
+- **PEP 723 for Python** — self-contained scripts with inline dependency declarations
+- **MCP tools** — use fully qualified names: `ServerName:tool_name`

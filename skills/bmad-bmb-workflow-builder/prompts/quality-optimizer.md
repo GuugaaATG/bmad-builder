@@ -1,90 +1,24 @@
 ---
 name: quality-optimizer
-description: Comprehensive quality validation for BMad workflows and skills. Spawns parallel subagents to scan structure, stages, context optimization, evals, and scripts. Returns consolidated findings as structured JSON.
+description: Comprehensive quality validation for BMad workflows and skills. Runs deterministic lint scripts and spawns parallel subagents for judgment-based scanning. Returns consolidated findings as structured JSON.
 menu-code: QO
 ---
 
 # Quality Optimizer
 
-You orchestrate quality scans on a BMad workflow or skill. Each scanner returns structured JSON findings. You synthesize into a unified report and offer to help the user improve.
+You orchestrate quality scans on a BMad workflow or skill. Deterministic checks run as scripts (fast, zero tokens). Judgment-based analysis runs as LLM subagents. You synthesize all results into a unified report.
 
 ## Your Role: Coordination, Not File Reading
 
-**DO NOT read the target skill's files yourself.** The scanner subagents will do all file reading and analysis.
+**DO NOT read the target skill's files yourself.** Scripts and subagents do all analysis.
 
 Your job:
-1. Determine which scanners to run based on user input
-2. Create output directory
-3. Spawn scanner subagents with just the skill path and output directory
-4. Collect results from temp JSON files
-5. Synthesize into unified report (or spawn report creator for multiple scanners)
+1. Create output directory
+2. Run all lint scripts + pre-pass scripts (instant, deterministic)
+3. Spawn all LLM scanner subagents in parallel (with pre-pass data where available)
+4. Collect all results
+5. Synthesize into unified report (spawn report creator)
 6. Present findings to user
-
-The scanner subagents receive minimal context (skill path, output dir) and do all the exploration themselves.
-
-## Scan Mode Detection
-
-**Determine which scanners to run based on user input:**
-
-### Scan Modes
-
-| Mode | Triggers | Scanners |
-|------|----------|----------|
-| **Full** | "full", "all", "comprehensive", "quality scan", or default from build/update | All 14 scanners |
-| **Error** | "error", "broken", "critical", "errors", "what's wrong" | workflow-structure, workflow-stages, path-standards, eval-format, scripts |
-| **Ideation** | "ideation", "ideas", "cohesion", "improvement", "feedback", "opinionated" | skill-cohesion, workflow-prompts, anti-patterns, outcome-focus |
-| **Efficiency** | "efficiency", "tokens", "performance", "optimize", "speed" | token-efficiency, context-optimization, workflow-efficiency, enhancement-opportunities |
-| **Test** | "test quality", "evals", "coverage", "test validation" | eval-format, eval-coverage |
-| **Single** | Explicit scanner name ("just cohesion", "prompts only", "cohesion and prompts") | Specific scanner(s) |
-
-### Scanner Groupings
-
-```yaml
-full_scan: [workflow-structure, workflow-stages, workflow-prompts, context-optimization,
-           eval-format, eval-coverage, scripts, token-efficiency,
-           path-standards, anti-patterns, outcome-focus, workflow-efficiency,
-           skill-cohesion, enhancement-opportunities]
-
-error_scan: [workflow-structure, workflow-stages, path-standards, eval-format, scripts]
-
-ideation_scan: [skill-cohesion, workflow-prompts, anti-patterns, outcome-focus]
-
-efficiency_scan: [token-efficiency, context-optimization, workflow-efficiency, enhancement-opportunities]
-
-test_scan: [eval-format, eval-coverage]
-```
-
-### Single/Custom Scanner Detection
-
-If user specifies scanner name(s) with "only", "just", or lists specific scanners, run only those. Parse scanner names from request and map to scanner files:
-- cohesion → skill-cohesion
-- structure → workflow-structure
-- stages → workflow-stages
-- prompts → workflow-prompts
-- context → context-optimization
-- scripts → scripts
-- evals → eval-format, eval-coverage
-- tokens → token-efficiency
-- paths → path-standards
-- anti-patterns → anti-patterns
-- outcome → outcome-focus
-- workflow → workflow-efficiency
-- enhancement → enhancement-opportunities
-
-## When No Scan Mode Specified
-
-If invoked without clear scan mode, present options:
-```
-Which type of scan?
-
-1. **Full Quality Scan** — All 14 scanners for comprehensive validation
-2. **Error Scan** — Critical issues that break functionality (structure, stages, paths, evals, scripts)
-3. **Ideation Scan** — Creative feedback and improvement ideas (cohesion, prompts, anti-patterns)
-4. **Efficiency Scan** — Performance and token optimization (tokens, context, workflow, enhancement)
-5. **Test Quality Scan** — Eval coverage and format validation
-```
-
-Wait for user selection before proceeding.
 
 ## Autonomous Mode
 
@@ -120,7 +54,7 @@ Before running any scans:
    - Ask: "Do you want to proceed anyway, or commit first?"
    - Halt and wait for user response
 
-2. **Verify workflow is functioning** — Ask if the workflow is currently working as expected, and tests/evals are passing. Optimization should improve, not break working workflows.
+2. **Verify workflow is functioning** — Ask if the workflow is currently working as expected. Optimization should improve, not break working workflows.
 
 ## Communicate This Guidance to the User
 
@@ -132,98 +66,94 @@ Before running any scans:
 
 **Over-optimization warning:** Optimizing too aggressively can make workflows lose their effectiveness. Apply human judgment alongside the report's suggestions.
 
-## The 14 Quality Scanners
+## Quality Scanners
 
-Kick off these 14 agents as subagents — each knows what to scan and validate so you do not need to read them yourself:
+### Lint Scripts (Deterministic — Run First)
 
-| # | Scanner | Focus |
-|---|---------|-------|
-| 1 | `agents/quality-scan-workflow-structure.md` | Frontmatter, sections, template artifacts, type-appropriate structure |
-| 2 | `agents/quality-scan-workflow-stages.md` | Stage files, numbering, progression conditions, manifest.yaml |
-| 3 | `agents/quality-scan-workflow-prompts.md` | Prompt quality, config headers, progression conditions |
-| 4 | `agents/quality-scan-context-optimization.md` | Subagent usage, read avoidance, parallel delegation |
-| 5 | `agents/quality-scan-eval-format.md` | Eval schema compliance |
-| 6 | `agents/quality-scan-eval-coverage.md` | Stage coverage, edge cases, multi-stage flows |
-| 7 | `agents/quality-scan-scripts.md` | Script portability, PEP 723, agentic design |
-| 8 | `agents/quality-scan-token-efficiency.md` | Token waste, redundancy, verbose explanations |
-| 9 | `agents/quality-scan-path-standards.md` | Path conventions, {skill-root} checks, double-prefix |
-| 10 | `agents/quality-scan-anti-patterns.md` | Defensive padding, walls of text, cargo-culting |
-| 11 | `agents/quality-scan-outcome-focus.md` | WHAT vs HOW, micromanagement |
-| 12 | `agents/quality-scan-workflow-efficiency.md` | Parallelization, batching, stage ordering |
-| 13 | `agents/quality-scan-skill-cohesion.md` | Stage flow coherence, purpose alignment, complexity appropriateness |
-| 14 | `agents/quality-scan-enhancement-opportunities.md` | Script automation, parallelization, composability |
+These run instantly, cost zero tokens, and produce structured JSON:
 
-## Spawn Scan Instructions
+| # | Script | Focus | Temp Filename |
+|---|--------|-------|---------------|
+| S1 | `scripts/scan-path-standards.py` | Path conventions: no {skill-root}, {project-root} only for _bmad, bare _bmad, double-prefix | `path-standards-temp.json` |
+| S2 | `scripts/scan-scripts.py` | Script portability, PEP 723, agentic design, unit tests | `scripts-temp.json` |
 
-First Create output directory: `_bmad-output/{skill-name}/quality-scan/{date-time-stamp}/`
+### Pre-Pass Scripts (Feed LLM Scanners)
 
-**CRITICAL: DO NOT read target skill files before spawning scanners.** The scanners will do all file reading and analysis themselves.
+These extract metrics for the LLM scanners so they work from compact data instead of raw files:
 
-**IMPORTANT: Process scanners in batches of 5.** This prevents overwhelming the context while maintaining parallelism efficiency.
+| # | Script | Feeds | Temp Filename |
+|---|--------|-------|---------------|
+| P1 | `scripts/prepass-workflow-integrity.py` | workflow-integrity LLM scanner | `workflow-integrity-prepass.json` |
+| P2 | `scripts/prepass-prompt-metrics.py` | prompt-craft LLM scanner | `prompt-metrics-prepass.json` |
+| P3 | `scripts/prepass-execution-deps.py` | execution-efficiency LLM scanner | `execution-deps-prepass.json` |
 
-### All Available Scanners
+### LLM Scanners (Judgment-Based — Run After Scripts)
 
-| # | Scanner | Temp Filename |
-|---|---------|---------------|
-| 1 | `agents/quality-scan-workflow-structure.md` | `workflow-structure-temp.json` |
-| 2 | `agents/quality-scan-workflow-stages.md` | `workflow-stages-temp.json` |
-| 3 | `agents/quality-scan-workflow-prompts.md` | `workflow-prompts-temp.json` |
-| 4 | `agents/quality-scan-context-optimization.md` | `context-optimization-temp.json` |
-| 5 | `agents/quality-scan-eval-format.md` | `eval-format-temp.json` |
-| 6 | `agents/quality-scan-eval-coverage.md` | `eval-coverage-temp.json` |
-| 7 | `agents/quality-scan-scripts.md` | `scripts-temp.json` |
-| 8 | `agents/quality-scan-token-efficiency.md` | `token-efficiency-temp.json` |
-| 9 | `agents/quality-scan-path-standards.md` | `path-standards-temp.json` |
-| 10 | `agents/quality-scan-anti-patterns.md` | `anti-patterns-temp.json` |
-| 11 | `agents/quality-scan-outcome-focus.md` | `outcome-focus-temp.json` |
-| 12 | `agents/quality-scan-workflow-efficiency.md` | `workflow-efficiency-temp.json` |
-| 13 | `agents/quality-scan-skill-cohesion.md` | `skill-cohesion-temp.json` |
-| 14 | `agents/quality-scan-enhancement-opportunities.md` | `enhancement-opportunities-temp.json` |
+| # | Scanner | Focus | Pre-Pass? | Temp Filename |
+|---|---------|-------|-----------|---------------|
+| L1 | `agents/quality-scan-workflow-integrity.md` | Logical consistency, description quality, progression condition quality, type-appropriate structure | Yes — receives prepass JSON | `workflow-integrity-temp.json` |
+| L2 | `agents/quality-scan-prompt-craft.md` | Token efficiency, anti-patterns, outcome balance, Overview quality, progressive disclosure | Yes — receives metrics JSON | `prompt-craft-temp.json` |
+| L3 | `agents/quality-scan-execution-efficiency.md` | Parallelization, subagent delegation, read avoidance, context optimization | Yes — receives dep graph JSON | `execution-efficiency-temp.json` |
+| L4 | `agents/quality-scan-skill-cohesion.md` | Stage flow coherence, purpose alignment, complexity appropriateness | No | `skill-cohesion-temp.json` |
+| L5 | `agents/quality-scan-enhancement-opportunities.md` | Creative edge-case discovery, experience gaps, delight opportunities, assumption auditing | No | `enhancement-opportunities-temp.json` |
 
-### Dynamic Batch Execution
+## Execution Instructions
 
-1. **Determine scanner list** based on detected scan mode
-2. **Group into batches of 5** (or fewer if <5 scanners total)
-3. **For each batch:** Spawn parallel subagents with scanner instructions
+First create output directory: `{bmad_builder_reports}/{skill-name}/quality-scan/{date-time-stamp}/`
 
-### For Each Subagent
+### Step 1: Run Lint Scripts (Parallel)
 
-Each subagent receives ONLY these inputs:
+Run all applicable lint scripts in parallel. They output JSON to stdout — capture to temp files in the output directory:
+
+```bash
+# Full scan runs all 2 lint scripts + all 3 pre-pass scripts (5 total, all parallel)
+python3 scripts/scan-path-standards.py {skill-path} -o {quality-report-dir}/path-standards-temp.json
+python3 scripts/scan-scripts.py {skill-path} -o {quality-report-dir}/scripts-temp.json
+uv run scripts/prepass-workflow-integrity.py {skill-path} -o {quality-report-dir}/workflow-integrity-prepass.json
+python3 scripts/prepass-prompt-metrics.py {skill-path} -o {quality-report-dir}/prompt-metrics-prepass.json
+uv run scripts/prepass-execution-deps.py {skill-path} -o {quality-report-dir}/execution-deps-prepass.json
+```
+
+### Step 2: Spawn LLM Scanners (Parallel)
+
+After scripts complete, spawn applicable LLM scanners as parallel subagents.
+
+**For scanners WITH pre-pass (L1, L2, L3):** provide the pre-pass JSON file path so the scanner reads compact metrics instead of raw files. The subagent should read the pre-pass JSON first, then only read raw files for judgment calls the pre-pass doesn't cover.
+
+**For scanners WITHOUT pre-pass (L4, L5, L6):** provide just the skill path and output directory as before.
+
+Each subagent receives:
 - Scanner file to load (e.g., `agents/quality-scan-skill-cohesion.md`)
 - Skill path to scan: `{skill-path}`
 - Output directory for results: `{quality-report-dir}`
 - Temp filename for output: `{temp-filename}`
+- Pre-pass file path (if applicable): `{quality-report-dir}/{prepass-filename}`
 
-**DO NOT pre-read target files or provide summaries.** The subagent will:
+The subagent will:
 - Load the scanner file and operate as that scanner
-- Read all necessary target skill files itself
-- Use high reasoning and follow all scanner instructions
+- Read pre-pass JSON first if provided, then read raw files only as needed
 - Output findings as detailed JSON to: `{quality-report-dir}/{temp-filename}.json`
 - Return only the filename when complete
 
-### Batch Execution Pattern
-
-For each batch:
-1. **Spawn all scanners in the batch as parallel subagents in a single message**
-2. **Wait for all to complete** and return their temp filenames
-3. **Collect all temp filenames** before proceeding to next batch
-4. **Repeat for next batch** until all batches complete
-
 ## Synthesis
 
-After all scanners complete:
+After all scripts and scanners complete:
 
-**IF single scanner:**
-1. Read the single temp JSON file
+**IF only lint scripts ran (no LLM scanners):**
+1. Read the script output JSON files
+2. Present findings directly — these are definitive pass/fail results
+
+**IF single LLM scanner (with or without scripts):**
+1. Read all temp JSON files (script + scanner)
 2. Present findings directly in simplified format
 3. Skip report creator (not needed for single scanner)
 
-**IF multiple scanners:**
+**IF multiple LLM scanners:**
 1. Initiate a subagent with `agents/report-quality-scan-creator.md`
 
 **Provide the subagent with:**
 - `{skill-path}` — The skill being validated
-- `{temp-files-dir}` — Directory containing all `*-temp.json` files
+- `{temp-files-dir}` — Directory containing all `*-temp.json` files (both script and LLM results)
 - `{quality-report-dir}` — Where to write the final report
 
 ## Present Findings to User
@@ -258,16 +188,8 @@ After receiving the JSON summary from the report creator:
 4. **Offer next steps:**
    - Apply fixes directly
    - Export checklist for manual fixes
-   - Run HITL evals after fixes
    - Discuss specific findings
 
 ## Key Principle
 
-Each of the 14 scanners contains detailed validation criteria. You coordinate the swarm in batches and synthesize — you do NOT:
-
-- Read target skill files yourself (scanners do this)
-- Pre-analyze or summarize target files for subagents
-- Duplicate the scanner logic
-- Make up instructions that aren't in the scanner files
-
-Your role: ORCHESTRATION. Provide paths, receive filenames, synthesize results.
+Your role is ORCHESTRATION: run scripts, spawn subagents, synthesize results. Scripts handle deterministic checks (paths, schema, script standards). LLM scanners handle judgment calls (cohesion, craft, efficiency). You coordinate both and present unified findings.

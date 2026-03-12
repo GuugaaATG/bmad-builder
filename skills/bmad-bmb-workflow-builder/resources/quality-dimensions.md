@@ -1,81 +1,43 @@
-# Quality Dimensions
+# Quality Dimensions — Quick Reference
 
-Before finalizing a skill, verify it against these 6 dimensions.
+Six dimensions to keep in mind when building skills. The quality scanners check these automatically during optimization — this is a mental checklist for the build phase.
 
-## 1. Intelligence Placement
+## 1. Informed Autonomy
 
-**Principle:** Token-based reasoning is expensive. Automation is cheap.
+The executing agent needs enough context to make judgment calls when situations don't match the script. The Overview section establishes this: domain framing, theory of mind, design rationale.
 
-Scripts are plumbing (fetch, transform, transport) — not classification.
-The prompt is intelligence (interpretation, judgment, decision-making).
+- Simple utilities need minimal context — input/output is self-explanatory
+- Interactive/complex workflows need domain understanding, user perspective, and rationale for non-obvious choices
+- When in doubt, explain *why* — an agent that understands the mission improvises better than one following blind steps
+
+## 2. Intelligence Placement
+
+Scripts handle plumbing (fetch, transform, validate). Prompts handle judgment (interpret, classify, decide).
 
 **Test:** If a script contains an `if` that decides what content *means*, intelligence has leaked.
-Could a script contain regex-based classification? That's intelligence done badly — brittleness without accuracy.
 
-## 2. Token Efficiency
+## 3. Progressive Disclosure
 
-**Principle:** Every unnecessary token costs money.
+SKILL.md stays focused. Detail goes where it belongs.
 
-- No redundant instructions explaining what the model already knows
-- No defensive padding ("make sure you...", "don't forget...")
-- No excessive trigger phrases in description
-- Progressive disclosure: detailed docs belong in `resources/`, loaded on-demand
-- Target: SKILL.md under ~100 lines
+- Stage instructions → `prompts/`
+- Reference data, schemas, large tables → `resources/`
+- Templates, config files → `assets/`
+- Multi-branch SKILL.md under ~250 lines: fine as-is
+- Single-purpose up to ~500 lines: acceptable if focused
 
-## 3. Outcome Focus
+## 4. Description Format
 
-**Principle:** Describe WHAT to achieve, not HOW to achieve it step-by-step.
+Two parts: `[5-8 word summary]. [Use when user says 'X' or 'Y'.]`
 
-The model knows how common CLIs work — don't explain them.
-Exception: corrective instructions from past failures are justified.
+Default to conservative triggering. See `resources/standard-fields.md` for full format and examples.
 
-**Test:** Is this micromanaging, or stating the outcome?
+## 5. Path Construction
 
-## 4. Workflow Ordering
+Never use `{skill-root}`. Only use `{project-root}` for `_bmad` paths. Config variables used directly — they already contain `{project-root}`.
 
-**Principle:** Sequential steps must truly depend on each other's output.
+See `resources/standard-fields.md` for correct/incorrect patterns.
 
-Independent data-gathering steps written sequentially waste time.
-Identify real dependencies and flag parallelization opportunities.
+## 6. Token Efficiency
 
-**Test:** Could steps 2 and 3 run simultaneously?
-
-## 5. Automate Mechanics
-
-**Principle:** Purely mechanical steps burn tokens unnecessarily.
-
-Extract to scripts when: deterministic operations, repeated patterns, complex I/O.
-Keep inline when: requires judgment, context-dependent, one-off operations.
-Standard shell pipelines (curl, jq, grep) stay inline unless used repeatedly.
-
-## 6. Path Construction — CRITICAL
-
-**Principle:** ALL paths MUST use explicit prefixes for tools and LLMs to resolve correctly.
-
-Without `{skill-root}` or `{project-root}` prefixes, tools fail to find files and LLMs cannot resolve paths correctly.
-
-**Required prefixes:**
-- `{skill-root}` — for skill-internal files (resources, prompts, scripts)
-- `{project-root}` — for project-level artifact paths
-
-**Correct patterns:**
-```
-{skill-root}/resources/reference.md
-{skill-root}/prompts/stage-one.md
-{project-root}/_bmad/planning/prd.md
-{project-root}/{config_variable}/output.md
-```
-
-**Incorrect patterns — NEVER use:**
-```
-./resources/reference.md           # Relative path fails
-../references/file.md              # Parent directory escape fails
-resources/reference.md             # No prefix fails
-/Users/username/project/file.md    # Absolute path not portable
-```
-
-**Config-resolved variables:** When a config variable like `{planning_artifacts}` already resolves to a full path, do NOT prefix again:
-- ✅ `{planning_artifacts}/prd.md`
-- ❌ `{project_root}/{planning_artifacts}/prd.md`
-
-**Test:** Does every file path start with `{skill-root}` or `{project-root}`?
+Remove genuine waste (repetition, defensive padding, meta-explanation). Preserve context that enables judgment (domain framing, theory of mind, design rationale). These are different things — the prompt-craft scanner distinguishes between them.
