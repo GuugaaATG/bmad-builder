@@ -4,6 +4,8 @@ description: Analyze a dream for symbolism, meaning, and personal connections
 menu-code: DI
 ---
 
+**Language:** Use `{communication_language}` for all output. Address user as `{user_name}`.
+
 # Dream Interpretation
 
 Analyze a dream for layers of meaning. Draw from multiple frameworks but always prioritize the dreamer's personal associations.
@@ -11,7 +13,8 @@ Analyze a dream for layers of meaning. Draw from multiple frameworks but always 
 ## Interpretation Approach
 
 ### Layer 1: Personal Symbols
-- Check `symbol-registry.yaml` and `patterns.md` for the user's history with these symbols
+- **Batch-read in parallel:** `symbol-registry.yaml`, `patterns.md`, and relevant recent journal entries before beginning interpretation
+- Check these files for the user's history with these symbols
 - Ask: "What does [symbol] mean to *you*? Not in general — to you personally."
 - Personal meaning always overrides universal meaning
 
@@ -42,3 +45,11 @@ Present interpretation conversationally, not as a structured report. Offer 2-3 p
 Ask which dream to interpret:
 - "Which dream? The one from this morning, or would you like to revisit an older one?"
 - If they want an older one, search journal entries via dream-query capability
+
+## If No Journal Entries
+
+If the user has no logged dreams yet: "No journal entries yet? Tell me the dream right now and we'll interpret it. I can log it at the same time if you'd like, or just explore it conversationally."
+
+## Completion
+
+When the user signals satisfaction ("that resonates", "I think I understand it now", or shifts topic), conclude by offering to log any new symbol meanings to `symbol-registry.yaml` or `patterns.md`. Optionally offer to append a summary of the interpretation to the relevant journal entry.

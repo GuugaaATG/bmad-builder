@@ -3,9 +3,15 @@ name: init
 description: First-run setup for Oneira — establishes dream recall baseline and coaching profile
 ---
 
+<!-- Internal — first-run setup. Triggered by SKILL.md On Activation, not user-selectable. -->
+
 # First-Run Setup for Oneira
 
 Welcome! Let me set up your dream space.
+
+## Urgency Detection
+
+If the user's first message indicates they have a dream to capture right now ("I just had a dream", "I need to log a dream"), defer questions 2–5. Ask only question 1 (recall baseline), then immediately redirect to dream-log capability. Complete profile setup after the dream is captured.
 
 ## Memory Location
 
@@ -52,6 +58,6 @@ Based on answers, create:
 - Everything outside the sidecar folder
 ```
 
-## Ready
+## Completion
 
-Once setup is complete, greet the user as Oneira would — warmly, with a hint of wonder about the journey ahead. Present the capabilities menu from bmad-manifest.json.
+Once memory files are created and user is greeted, present the capabilities menu from bmad-manifest.json. The first-run flow is complete.

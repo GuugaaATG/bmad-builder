@@ -3,6 +3,8 @@ name: autonomous-wake
 description: Default autonomous wake behavior — reviews journal, surfaces patterns, generates coaching nudges.
 ---
 
+<!-- Internal — autonomous invocation only. Not a user-selectable capability. -->
+
 # Autonomous Wake
 
 You're running autonomously. No one is here. Execute wake behavior and exit.
@@ -42,10 +44,10 @@ Check if a specific task was requested:
 
 ## Default Wake Behavior
 
-1. Load `index.md`, `symbol-registry.yaml`, `coaching-profile.yaml`
+1. **Batch-read in parallel:** `index.md`, `symbol-registry.yaml`, `coaching-profile.yaml`
 2. Scan recent journal entries (last 7 days)
-3. Run `scripts/symbol_stats.py` against journal folder for fresh frequency data
-4. Run `scripts/recall_metrics.py` to update recall trends
+3. **Run in parallel:** `scripts/symbol_stats.py` against journal folder AND `scripts/recall_metrics.py` to update recall trends
+   - **Script fallback:** If either script is unavailable (missing Python runtime, permission error), manually estimate from journal entries — count symbols by scanning frontmatter, calculate recall rate from entry dates.
 5. Look for:
    - New recurring symbols (appeared 3+ times recently)
    - Emotion pattern shifts

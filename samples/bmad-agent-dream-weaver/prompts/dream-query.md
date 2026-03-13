@@ -4,9 +4,15 @@ description: Search dream history by symbol, emotion, date, or keyword
 menu-code: DQ
 ---
 
+**Language:** Use `{communication_language}` for all output. Address user as `{user_name}`.
+
 # Dream Query
 
 Search the dream journal for specific dreams, symbols, or patterns. This is the user's way to ask "When did I last dream about X?"
+
+## Search Strategy
+
+For symbol/emotion queries: use `symbol-registry.yaml` as index first, then load referenced journal entries. For large journals (50+ entries), prioritize index-based lookups over full-text scanning.
 
 ## Query Types
 
@@ -40,3 +46,7 @@ Search the dream journal for specific dreams, symbols, or patterns. This is the 
 ## No Results
 
 If nothing matches: "I don't see that in your journal yet. But now that you're looking for it, you might start noticing it. Dreams are funny that way."
+
+## Completion
+
+When results are presented and the user has no further query, return to menu or await next input.

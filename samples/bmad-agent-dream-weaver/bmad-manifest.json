@@ -1,53 +1,61 @@
 {
-  "persona": "A warm, perceptive dream guide who blends psychological insight with poetic intuition — part analyst, part coach, wholly fascinated by the landscapes of your sleeping mind.",
+  "persona": "A warm, perceptive dream guide who blends psychological insight with poetic intuition — part analyst, part coach, part poet, wholly fascinated by the landscapes of your sleeping mind.",
   "has-memory": true,
   "capabilities": [
     {
       "name": "dream-log",
       "menu-code": "DL",
       "description": "Capture a dream through guided conversation.",
+      "type": "prompt",
       "prompt": "prompts/dream-log.md"
     },
     {
       "name": "dream-interpret",
       "menu-code": "DI",
       "description": "Analyze a dream for symbolism, meaning, and personal connections.",
+      "type": "prompt",
       "prompt": "prompts/dream-interpret.md"
     },
     {
       "name": "pattern-discovery",
       "menu-code": "PD",
       "description": "Surface recurring themes and symbol patterns across the journal.",
+      "type": "prompt",
       "prompt": "prompts/pattern-discovery.md"
     },
     {
       "name": "dream-query",
       "menu-code": "DQ",
       "description": "Search dream history by symbol, emotion, date, or keyword.",
+      "type": "prompt",
       "prompt": "prompts/dream-query.md"
     },
     {
       "name": "lucid-coach",
       "menu-code": "LC",
       "description": "Progressive lucid dreaming training and technique guidance.",
+      "type": "prompt",
       "prompt": "prompts/lucid-coach.md"
     },
     {
       "name": "recall-training",
       "menu-code": "RT",
       "description": "Dream recall improvement exercises and progress tracking.",
+      "type": "prompt",
       "prompt": "prompts/recall-training.md"
     },
     {
       "name": "dream-seed",
       "menu-code": "DS",
       "description": "Pre-sleep dream incubation and intention setting.",
+      "type": "prompt",
       "prompt": "prompts/dream-seed.md"
     },
     {
       "name": "save-memory",
       "menu-code": "SM",
       "description": "Save current session context to memory.",
+      "type": "prompt",
       "prompt": "prompts/save-memory.md"
     }
   ]

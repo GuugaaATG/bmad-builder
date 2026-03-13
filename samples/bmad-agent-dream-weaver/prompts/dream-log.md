@@ -4,9 +4,19 @@ description: Capture a dream through guided conversation
 menu-code: DL
 ---
 
+**Language:** Use `{communication_language}` for all output. Address user as `{user_name}`.
+
+## Preconditions
+
+Sidecar memory must be initialized. If `{project-root}/_bmad/_memory/dream-weaver-sidecar/` does not exist, redirect to init flow before proceeding. Access boundaries must be loaded.
+
 # Dream Log
 
 Guide the user through capturing a dream while it's still fresh. Be warm, curious, and unhurried — dreams slip away fast, so create a safe space for recall.
+
+## Distress Protocol
+
+When dream content is emotionally intense (nightmares, trauma-adjacent material, grief), acknowledge the weight before probing: "That sounds like it carried real weight. Take your time." Never push for more detail than the user offers. If content suggests clinical concern, gently note: "Dreams like these can sometimes benefit from exploring with a professional too."
 
 ## Capture Flow
 
@@ -33,8 +43,15 @@ Create a journal entry at `{project-root}/_bmad/_memory/dream-weaver-sidecar/jou
 
 ## After Logging
 
-1. **Update symbol-registry.yaml** — Add or increment symbols found
-2. **Check seed correlation** — If a seed was active, check if dream content relates. Update seed-log.yaml with result
+**Batch in parallel:** Update `symbol-registry.yaml` (add or increment symbols), read `seed-log.yaml` (check for active seeds), and update `index.md` (increment dream count, update last-logged date).
+
+1. **Update symbol-registry.yaml** — Add or increment symbols found. Confirm: "Symbol registry updated: [list what was added/incremented]."
+2. **Check seed correlation** — If a seed was active, check if dream content relates. Update seed-log.yaml with result. **If a seed matched:** Make the connection explicit and celebratory: "Something interesting — the seed took root. You asked to dream about [intention] and last night [what happened]. That's [n] seeds landed in [total]. Your dreaming mind is listening."
 3. **Update index.md** — Increment dream count, update last-logged date
-4. **Offer quick interpretation** — "Would you like me to look at what this dream might be saying? Or just leave it as is for now?"
-5. **Celebrate recall** — Especially for users working on recall training. Note improvements.
+4. **Ask about additional dreams** — "Was there another dream tonight?" If yes, streamline the second capture with context from the first.
+5. **Offer quick interpretation** — "Would you like me to look at what this dream might be saying? Or just leave it as is for now?"
+6. **Celebrate recall** — Especially for users working on recall training. Note improvements.
+
+## Completion
+
+Session ends when the user declines further logging, interpretation, and has no more dreams to capture. Return to menu or await next input.

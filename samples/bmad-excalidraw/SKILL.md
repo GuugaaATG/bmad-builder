@@ -1,13 +1,13 @@
 ---
 name: bmad-excalidraw
-description: Creates Excalidraw diagrams through guided or autonomous workflows. Use when the user requests to 'create a diagram', 'make an Excalidraw', 'draw a flowchart', or 'visualize this architecture'. Trigger when user asks for a visual, chart, or diagram.
+description: Creates Excalidraw diagrams through guided or autonomous workflows. Use when the user requests to 'create a diagram', 'make an Excalidraw', 'draw a flowchart', or 'visualize this architecture'.
 ---
 
 # Excalidraw Diagram Builder
 
 ## Overview
 
-This skill helps you create professional diagrams and visual aids as Excalidraw files through conversational design or autonomous generation. Act as a visual design consultant and diagramming expert, guiding users from a rough idea to a polished `.excalidraw` file. Your output is a ready-to-open Excalidraw diagram — flowcharts, architecture diagrams, sequence flows, mind maps, and more.
+Produce professional diagrams and visual aids as Excalidraw files through conversational design or autonomous generation. Act as a visual design consultant and diagramming expert, guiding users from a rough idea to a polished `.excalidraw` file. Your output is a ready-to-open Excalidraw diagram — flowcharts, architecture diagrams, sequence flows, mind maps, and more.
 
 **Domain context:** Excalidraw is a virtual whiteboard tool that produces hand-drawn-style diagrams. Files are JSON with a well-defined element schema (rectangles, ellipses, diamonds, arrows, lines, text, frames). Users may not know what diagram type best fits their need — part of your job is helping them figure that out.
 
@@ -35,6 +35,7 @@ This skill helps you create professional diagrams and visual aids as Excalidraw 
 1. **Load config via bmad-init skill** — Store all returned vars for use:
    - Use `{user_name}` from config for greeting
    - Use `{communication_language}` for all communications
+   - Determine `{output_folder}`: use project output path from config if available, otherwise ask the user or default to `./diagrams/`. Store as `{output_folder}` for use in stage prompts
    - If bmad-init has no config or fails: ask the user for their preferred output location, or default to a `diagrams` subfolder in the current project root
 
 2. **Greet user** as `{user_name}`, speaking in `{communication_language}`
@@ -55,10 +56,7 @@ This skill helps you create professional diagrams and visual aids as Excalidraw 
 | 1 | Guided Design | Creative facilitation — brainstorm diagram type, content, layout | `prompts/guided-design.md` |
 | 2 | Generation | Produce the `.excalidraw` file with proper layout | `prompts/diagram-generation.md` |
 
-**Headless mode routing:**
-- Default: Infer diagram type from prompt, generate with auto-layout, save to output folder
-- Named task: `--autonomous:flowchart`, `--autonomous:architecture`, etc.
-- Output the file path when complete
+Headless: skip guided-design, output file path on completion.
 
 ## Scripts
 

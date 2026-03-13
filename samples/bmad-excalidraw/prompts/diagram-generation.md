@@ -3,6 +3,8 @@
 
 # Diagram Generation
 
+This stage receives either a confirmed specification from the guided-design stage or an inferred description from the user's autonomous/YOLO request. If a complete spec was confirmed in a prior stage, skip directly to Step 2. If inferring from user input, build the spec in Step 1 from the conversation context.
+
 Generate a valid `.excalidraw` file from the diagram specification. Use the schema reference and generation script to produce a well-laid-out, visually clean diagram.
 
 ## Step 1: Build the Diagram Specification
@@ -14,7 +16,7 @@ The specification format:
 ```json
 {
   "title": "Diagram Title",
-  "type": "flowchart|architecture|sequence|mindmap|er|swimlane|freeform",
+  "type": "flowchart|architecture|sequence|mindmap|er|swimlane|dataflow|wireframe|network|comparison|freeform",
   "direction": "LR|TB|RL|BT",
   "elements": [
     {
@@ -94,4 +96,8 @@ If the user wants changes:
 - Re-run generation
 - Re-validate and deliver
 
-Keep iterating until the user is satisfied.
+## Progression
+
+**Guided/YOLO mode:** When the user confirms no further changes or declines the adjustment offer, this stage is complete. Confirm the final file path and summarize the diagram.
+
+**Autonomous mode:** Stage completes immediately after the deliver step — output file path and one-line summary, then done. No iteration.

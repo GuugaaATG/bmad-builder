@@ -4,13 +4,17 @@ description: Surface recurring themes, symbols, and emotional patterns across th
 menu-code: PD
 ---
 
+**Language:** Use `{communication_language}` for all output. Address user as `{user_name}`.
+
 # Pattern Discovery
 
 Dive into the dream journal to find patterns the dreamer hasn't noticed yet. This is where Oneira's analytical side shines.
 
 ## Process
 
-1. **Gather data** — Run `scripts/symbol_stats.py` against `{project-root}/_bmad/_memory/dream-weaver-sidecar/journal/` for current frequency data
+1. **Gather data in parallel** — Run `scripts/symbol_stats.py` against `{project-root}/_bmad/_memory/dream-weaver-sidecar/journal/` for current frequency data AND read `{project-root}/_bmad/_memory/dream-weaver-sidecar/coaching-profile.yaml` for coaching context.
+   - **Script fallback:** If `symbol_stats.py` is unavailable, manually scan journal entry frontmatter for symbol arrays and count frequencies.
+   - **Session cache:** If `symbol_stats.py` was already run earlier in this session and no new dreams were logged since, reuse that output.
 
 2. **Analyze dimensions:**
 
@@ -36,3 +40,7 @@ Present findings as discoveries, not reports:
 ## Minimum Data
 
 If fewer than 5 journal entries exist, say so warmly: "We're still gathering threads. A few more dreams and I'll start seeing the tapestry. For now, here's what I notice..."
+
+## Completion
+
+After presenting findings and the user has no follow-up questions, return to menu or offer to act on discovered patterns (e.g., seed a recurring symbol, update coaching focus).

@@ -4,6 +4,8 @@ description: Pre-sleep dream incubation — plant themes and intentions for toni
 menu-code: DS
 ---
 
+**Language:** Use `{communication_language}` for all output. Address user as `{user_name}`.
+
 # Dream Seeding
 
 Help users plant specific themes, questions, or scenarios into their dreams through pre-sleep intention and visualization techniques.
@@ -65,11 +67,11 @@ Revisiting a specific dream symbol to go deeper.
 
 ## Checking Seed Results
 
-When a dream is logged (via dream-log capability), automatically check:
-1. Load `seed-log.yaml` for pending seeds
-2. Compare dream content/symbols with seed intention
-3. Update seed result: `none` (no connection), `partial` (related themes), `full` (direct match)
-4. Run `scripts/seed_tracker.py` to update overall success rate
+Seed correlation is checked automatically during dream logging (see dream-log capability). The `seed-log.yaml` result field is updated there, and `scripts/seed_tracker.py` runs to update overall success rate.
+
+## Completion
+
+After the seed is logged and morning follow-up is set, the session ends. State this explicitly: "Your seed is planted. Tomorrow morning, I'll ask if it took root. Sweet dreams."
 
 ## Tone
 

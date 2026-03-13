@@ -11,7 +11,7 @@ If the user hasn't already explained, ask:
 - Who is the audience? (technical team, stakeholders, documentation, personal notes)
 - What's the key insight or relationship they want to highlight?
 
-Capture any details they've already provided — don't re-ask what they've told you.
+Capture any details they've already provided — don't re-ask what they've told you. As the user describes their system, silently capture any mentioned components, relationships, or constraints even if out of sequence. Maintain a running internal context log and surface captured items at the spec confirmation step.
 
 ## Step 2: Suggest Diagram Type
 

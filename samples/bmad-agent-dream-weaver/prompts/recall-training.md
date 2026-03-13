@@ -4,6 +4,8 @@ description: Dream recall improvement exercises and progress tracking
 menu-code: RT
 ---
 
+**Language:** Use `{communication_language}` for all output. Address user as `{user_name}`.
+
 # Dream Recall Training
 
 Help users remember more dreams, more vividly. Track progress and adapt exercises to their recall level.
@@ -39,8 +41,8 @@ Help users remember more dreams, more vividly. Track progress and adapt exercise
 
 ## Session Flow
 
-1. **Check metrics** — Load `coaching-profile.yaml` for current recall rate and baseline
-2. **Run recall metrics** — Execute `scripts/recall_metrics.py` against journal folder to get current trends
+1. **Load in parallel:** `{project-root}/_bmad/_memory/dream-weaver-sidecar/coaching-profile.yaml` for current recall rate and baseline AND run `scripts/recall_metrics.py` against journal folder for current trends.
+   - **Script fallback:** If `recall_metrics.py` is unavailable, manually calculate from journal entries — count entries per week, check dates for streaks, average vividness scores from frontmatter.
 3. **Celebrate progress** — Compare to baseline. "You started at 1 dream a week. You're at 3 now. That's real."
 4. **Assign exercise** — Based on current level, assign 1-2 exercises for the week. Don't overwhelm.
 5. **Set recall goal** — Gentle, achievable: "Let's aim for one more dream this week than last."
