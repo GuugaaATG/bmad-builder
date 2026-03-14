@@ -9,13 +9,22 @@ Create world-class AI agents and workflows with the BMad Builder.
 
 | Topic | Description |
 |-------|-------------|
-| **[What Are Agents](/explanation/what-are-bmad-agents.md)** | AI personas with specialized capabilities |
-| **[What Are Workflows](/explanation/what-are-workflows.md)** | Structured step-by-step processes and skills |
-| **[What Are Apps](/explanation/what-are-apps.md)** | Full applications built with BMad |
+| **[What Are Skills](/explanation/what-are-skills.md)** | The universal building block for everything BMad produces |
+| **[What Are Agents](/explanation/what-are-bmad-agents.md)** | AI personas with specialized capabilities and memory |
+| **[What Are Workflows](/explanation/what-are-workflows.md)** | Structured step-by-step processes and utilities |
 
-## Quick Start
+## Design Patterns
+
+| Topic | Description |
+|-------|-------------|
+| **[Progressive Disclosure](/explanation/progressive-disclosure.md)** | Four layers of context loading — from frontmatter through step files |
+| **[Subagent Patterns](/explanation/subagent-patterns.md)** | Six orchestration patterns for parallel and hierarchical work |
+| **[Skill Authoring Best Practices](/explanation/skill-authoring-best-practices.md)** | Core principles, common patterns, quality dimensions, and anti-patterns |
+
+## Reference
 
 | Resource | Description |
 |----------|-------------|
-| **[Create a Custom Agent](/how-to/create-custom-agent.md)** | Build your first AI agent |
-| **[Create Your First Workflow](/how-to/create-your-first-workflow.md)** | Design structured workflows |
+| **[Builder Commands](/reference/builder-commands.md)** | All capabilities, modes, and phases for both builders |
+| **[Skill Manifest](/reference/bmad-skill-manifest.md)** | Field reference for bmad-manifest.json |
+| **[Workflow Patterns](/reference/workflow-patterns.md)** | Skill types, structure patterns, and execution models |

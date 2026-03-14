@@ -29,11 +29,9 @@ BMad Builder lets you create:
 
 ## Quick Start
 
-| Guide | What You'll Build | Time |
-|-------|-------------------|------|
-| **[Create a Custom Agent](/how-to/create-custom-agent.md)** | AI persona with memory and commands | 15-30 min |
-| **[Create Your First Workflow](/how-to/create-your-first-workflow.md)** | Structured step-by-step process | 30-45 min |
-| **[Bundle Your Creations](/how-to/bundle-your-creations.md)** | Package for installation | 10-15 min |
+*Detailed quick start guide coming soon.* In the meantime, invoke the **Agent Builder** or **Workflow Builder** skill and describe what you want to build. Both guide you through a six-phase conversational discovery and produce a ready-to-use skill folder.
+
+See the [Builder Commands Reference](/reference/builder-commands.md) for all capabilities, modes, and phases.
 
 ## What You Can Build
 
@@ -44,13 +42,23 @@ BMad Builder lets you create:
 | **Creative** | Story architect, character developer, campaign designer |
 | **Any Domain** | If you can describe it, you can build it |
 
+## Design Patterns
+
+Build better skills with these guides distilled from real-world BMad development.
+
+| Guide | What You'll Learn |
+|-------|-------------------|
+| **[Progressive Disclosure](/explanation/progressive-disclosure.md)** | Structure skills so they load only the context needed at each moment |
+| **[Subagent Patterns](/explanation/subagent-patterns.md)** | Six orchestration patterns for parallel and hierarchical work |
+| **[Skill Authoring Best Practices](/explanation/skill-authoring-best-practices.md)** | Core principles, quality dimensions, and anti-patterns |
+
 ## Documentation
 
 | Section | Purpose |
 | ------- | ------- |
-| **[How-To Guides](/how-to/)** | Step-by-step instructions |
-| **[Explanation](/explanation/)** | Concepts and architecture |
-| **[Reference](/reference/)** | Technical specs |
+| **[Concepts](/explanation/)** | What agents, workflows, and skills are — and how they relate |
+| **[Design Patterns](/explanation/#design-patterns)** | Progressive disclosure, subagent orchestration, authoring best practices |
+| **[Reference](/reference/)** | Manifest schema, builder commands, workflow patterns |
 
 ## Community
 
