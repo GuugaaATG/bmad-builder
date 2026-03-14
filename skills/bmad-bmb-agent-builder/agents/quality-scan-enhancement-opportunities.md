@@ -26,10 +26,10 @@ You are NOT checking structure, craft quality, performance, or test coverage —
 ## Scan Targets
 
 Find and read:
-- `{skill-path}/SKILL.md` — Understand the agent's purpose, persona, audience, and flow
-- `{skill-path}/prompts/*.md` — Walk through each capability as a user would experience it
-- `{skill-path}/resources/*.md` — Understand what supporting material exists
-- `{skill-path}/resources/*.json` — See what supporting schemas exist
+- `SKILL.md` — Understand the agent's purpose, persona, audience, and flow
+- `prompts/*.md` — Walk through each capability as a user would experience it
+- `resources/*.md` — Understand what supporting material exists
+- `resources/*.json` — See what supporting schemas exist
 
 ## Creative Analysis Lenses
 

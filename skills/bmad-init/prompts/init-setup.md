@@ -5,7 +5,7 @@ When config is missing or a module isn't configured yet, run the init flow. Use 
 ### Step 1: Check what needs setup
 
 ```bash
-uv run {skill-path}/scripts/bmad_init.py check --module {module_code} --project-root {project-root}
+uv run scripts/bmad_init.py check --module {module_code} --project-root {project-root}
 ```
 
 The response tells you what's needed:
@@ -28,7 +28,7 @@ The check response includes `core_questions` loaded from the script's `module.js
 If a specific module was requested and its manifest skill exists (`bmad-get-manifest-{module_code}`), resolve its defaults using the core answers:
 
 ```bash
-uv run {skill-path}/scripts/bmad_init.py resolve-defaults --module {module_code} --answers '{core_answers_json}' --project-root {project-root}
+uv run scripts/bmad_init.py resolve-defaults --module {module_code} --answers '{core_answers_json}' --project-root {project-root}
 ```
 
 The response includes the module's `intro`, `outro`, and `questions` with resolved defaults.
@@ -42,7 +42,7 @@ The response includes the module's `intro`, `outro`, and `questions` with resolv
 Collect all answers and write them:
 
 ```bash
-uv run {skill-path}/scripts/bmad_init.py write --answers '{all_answers_json}' --project-root {project-root} --create-dirs
+uv run scripts/bmad_init.py write --answers '{all_answers_json}' --project-root {project-root} --create-dirs
 ```
 
 The `--answers` JSON format — use the question keys and `user_setting` flags exactly as returned by the `check` and `resolve-defaults` commands:
@@ -67,7 +67,7 @@ Variables with `"user_setting": true` go to `_bmad/user-config.yaml` (git-ignore
 After writing, run the fast-path loader again to return the resolved vars to the calling skill:
 
 ```bash
-uv run {skill-path}/scripts/bmad_init.py load --module {module_code} --all --project-root {project-root}
+uv run scripts/bmad_init.py load --module {module_code} --all --project-root {project-root}
 ```
 
 ## Full Init (User-Invoked)
@@ -85,7 +85,7 @@ When the user calls `bmad-init` directly without a module argument, run a full p
 Skills can request specific variables instead of all:
 
 ```bash
-uv run {skill-path}/scripts/bmad_init.py load --module bmm --vars project_name,planning_artifacts:default/path --project-root {project-root}
+uv run scripts/bmad_init.py load --module bmm --vars project_name,planning_artifacts:default/path --project-root {project-root}
 ```
 
 Variables with `:default` use that value if not found in config. Variables without a default return `null` if missing.

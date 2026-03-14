@@ -15,9 +15,9 @@ Read every prompt in the skill and evaluate craft quality with this core princip
 ## Scan Targets
 
 Find and read:
-- `{skill-path}/SKILL.md` — Primary target, evaluated with SKILL.md-specific criteria (see below)
-- `{skill-path}/prompts/*.md` — Each stage prompt evaluated for craft quality
-- `{skill-path}/resources/*.md` — Check progressive disclosure is used properly
+- `SKILL.md` — Primary target, evaluated with SKILL.md-specific criteria (see below)
+- `prompts/*.md` — Each stage prompt evaluated for craft quality
+- `resources/*.md` — Check progressive disclosure is used properly
 
 ---
 

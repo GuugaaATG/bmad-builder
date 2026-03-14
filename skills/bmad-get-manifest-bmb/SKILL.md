@@ -1,6 +1,6 @@
 ---
 name: bmad-get-manifest-bmb
-description: Returns the BMad Builder (bmb) module manifest for bmad-init configuration setup.
+description: Returns the BMad Builder (bmb) module manifest for bmad-init configuration setup. Only use when bmad-get-manifest-bmb is specifically invoked by name.
 ---
 
 ## Overview

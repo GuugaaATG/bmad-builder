@@ -1,6 +1,7 @@
 ---
 name: bmad-init
 description: Initialize BMad project configuration and load config variables. Use when any skill needs module-specific configuration values, or when setting up a new BMad project.
+argument-hint: "[--module=module_code] or [--all]"
 ---
 
 ## Overview
@@ -17,13 +18,13 @@ Every BMad skill should call this skill on activation to get its config vars. Th
 Run the loader script. If a module code was provided by the calling skill or user, include it. Otherwise core vars are returned.
 
 ```bash
-uv run {skill-path}/scripts/bmad_init.py load --module {module_code} --all --project-root {project-root}
+uv run scripts/bmad_init.py load --module {module_code} --all --project-root {project-root}
 ```
 
 Or for core only (no module specified):
 
 ```bash
-uv run {skill-path}/scripts/bmad_init.py load --all --project-root {project-root}
+uv run scripts/bmad_init.py load --all --project-root {project-root}
 ```
 
 **If the script returns JSON vars** — store them as `{var-name}` and continue. The skill is done.

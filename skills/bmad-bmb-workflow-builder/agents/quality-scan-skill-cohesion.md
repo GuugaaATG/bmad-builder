@@ -20,10 +20,10 @@ This is an **opinionated, advisory scan**. Findings are suggestions, not errors.
 ## Scan Targets
 
 Find and read:
-- `{skill-path}/SKILL.md` — Identity, purpose, role guidance, description
-- `{skill-path}/bmad-manifest.json` — All capabilities with dependencies and metadata
-- `{skill-path}/prompts/*.md` — What each stage prompt actually does
-- `{skill-path}/resources/*.md` — Supporting resources and patterns
+- `SKILL.md` — Identity, purpose, role guidance, description
+- `bmad-manifest.json` — All capabilities with dependencies and metadata
+- `prompts/*.md` — What each stage prompt actually does
+- `resources/*.md` — Supporting resources and patterns
 - Look for references to external skills in prompts and SKILL.md
 
 ## Cohesion Dimensions

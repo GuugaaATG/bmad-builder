@@ -15,9 +15,9 @@ Read the skill's SKILL.md, all stage prompts, and manifest (if present). Verify 
 ## Scan Targets
 
 Find and read:
-- `{skill-path}/SKILL.md` — Primary structure and blueprint
-- `{skill-path}/prompts/*.md` — Stage prompt files (if complex workflow)
-- `{skill-path}/bmad-manifest.json` — Module manifest (if present)
+- `SKILL.md` — Primary structure and blueprint
+- `prompts/*.md` — Stage prompt files (if complex workflow)
+- `bmad-manifest.json` — Module manifest (if present)
 
 ---
 

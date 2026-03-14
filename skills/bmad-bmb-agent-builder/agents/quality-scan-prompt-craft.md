@@ -19,9 +19,9 @@ Read the pre-pass JSON first at `{quality-report-dir}/prompt-metrics-prepass.jso
 Pre-pass provides: line counts, token estimates, section inventories, waste pattern matches, back-reference matches, config headers, progression conditions.
 
 Read raw files for judgment calls:
-- `{skill-path}/SKILL.md` — Overview quality, persona context assessment
-- `{skill-path}/prompts/*.md` — Each capability prompt for craft quality
-- `{skill-path}/resources/*.md` — Progressive disclosure assessment
+- `SKILL.md` — Overview quality, persona context assessment
+- `prompts/*.md` — Each capability prompt for craft quality
+- `resources/*.md` — Progressive disclosure assessment
 
 ---
 

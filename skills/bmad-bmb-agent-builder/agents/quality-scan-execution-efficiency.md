@@ -17,9 +17,9 @@ Read the pre-pass JSON first at `{quality-report-dir}/execution-deps-prepass.jso
 Pre-pass provides: dependency graph, sequential patterns, loop patterns, subagent-chain violations, memory loading patterns.
 
 Read raw files for judgment calls:
-- `{skill-path}/SKILL.md` — On Activation patterns, operation flow
-- `{skill-path}/prompts/*.md` — Each prompt for execution patterns
-- `{skill-path}/resources/*.md` — Resource loading patterns
+- `SKILL.md` — On Activation patterns, operation flow
+- `prompts/*.md` — Each prompt for execution patterns
+- `resources/*.md` — Resource loading patterns
 
 ---
 

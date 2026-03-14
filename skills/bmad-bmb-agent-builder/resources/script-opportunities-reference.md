@@ -53,14 +53,6 @@ Scripts validate structure and syntax (deterministic). Prompts evaluate semantic
 
 **Why:** Build process may leave `{if-autonomous}`, `{displayName}`, etc.
 
-**Checks:**
-```bash
-# Use grep with regex:
-grep -r '{if-\w\+}' {skill-path}/
-grep -r '{/if-\w\+}' {skill-path}/
-grep -rE '\{[A-Z][a-zA-Z]+\}' {skill-path}/  # camelCase placeholders
-```
-
 **Output:** JSON with file path, line number, artifact type
 
 **Implementation:** Bash script with JSON output via jq

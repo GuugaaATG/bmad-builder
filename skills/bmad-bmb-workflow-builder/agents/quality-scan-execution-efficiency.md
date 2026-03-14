@@ -15,10 +15,10 @@ Read the skill's SKILL.md, all prompt files, and manifest (if present). Identify
 ## Scan Targets
 
 Find and read:
-- `{skill-path}/SKILL.md` — On Activation patterns, operation flow
-- `{skill-path}/prompts/*.md` — Each prompt for execution patterns
-- `{skill-path}/resources/*.md` — Resource loading patterns
-- `{skill-path}/bmad-manifest.json` — Stage ordering, dependencies
+- `SKILL.md` — On Activation patterns, operation flow
+- `prompts/*.md` — Each prompt for execution patterns
+- `resources/*.md` — Resource loading patterns
+- `bmad-manifest.json` — Stage ordering, dependencies
 
 ---
 

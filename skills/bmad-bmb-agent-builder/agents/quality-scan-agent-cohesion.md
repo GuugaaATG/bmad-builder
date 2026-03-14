@@ -20,10 +20,10 @@ This is an **opinionated, advisory scan**. Findings are suggestions, not errors.
 ## Scan Targets
 
 Find and read:
-- `{skill-path}/SKILL.md` — Identity, persona, principles, description
-- `{skill-path}/bmad-manifest.json` — All capabilities with menu codes and descriptions
-- `{skill-path}/prompts/*.md` — What each prompt actually does
-- `{skill-path}/resources/dimension-definitions.md` — If exists, context for capability design
+- `SKILL.md` — Identity, persona, principles, description
+- `bmad-manifest.json` — All capabilities with menu codes and descriptions
+- `prompts/*.md` — What each prompt actually does
+- `resources/dimension-definitions.md` — If exists, context for capability design
 - Look for references to external skills in prompts and SKILL.md
 
 ## Cohesion Dimensions
