@@ -166,9 +166,6 @@ def scan_skill(skill_path: Path, skip_fenced: bool = True) -> dict:
 
     files_scanned = []
     for md_file in md_files:
-        # Skip tests/fixtures
-        if 'tests/fixtures' in str(md_file):
-            continue
         rel = md_file.relative_to(skill_path)
         files_scanned.append(str(rel))
         file_findings = scan_file(md_file, skip_fenced)

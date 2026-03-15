@@ -40,7 +40,7 @@ This is the core creative path — where agent ideas become reality. Through six
 
 Agents are named personas with optional memory, capabilities, autonomous modes, and personality. The build process includes a lint gate for structural validation. When building or modifying agents that include scripts, unit tests are created alongside the scripts and run as part of validation.
 
-Load `prompts/build-process.md` to begin.
+Load `build-process.md` to begin.
 
 ## Quality Optimizer
 
@@ -48,7 +48,7 @@ For agents that already work but could work *better*. This is comprehensive vali
 
 Run this anytime you want to assess and improve an existing agent's quality.
 
-Load `prompts/quality-optimizer.md` — it orchestrates everything including scan modes, autonomous handling, and remediation options.
+Load `quality-optimizer.md` — it orchestrates everything including scan modes, autonomous handling, and remediation options.
 
 ---
 
@@ -56,8 +56,8 @@ Load `prompts/quality-optimizer.md` — it orchestrates everything including sca
 
 | Intent | Trigger Phrases | Route |
 |--------|----------------|-------|
-| **Builder** | "build/create/design/convert/edit/fix an agent", "new agent" | Load `prompts/build-process.md` |
-| **Quality Optimizer** | "quality check", "validate", "review/optimize/improve agent" | Load `prompts/quality-optimizer.md` |
+| **Builder** | "build/create/design/convert/edit/fix an agent", "new agent" | Load `build-process.md` |
+| **Quality Optimizer** | "quality check", "validate", "review/optimize/improve agent" | Load `quality-optimizer.md` |
 | **Unclear** | — | Present the two options above and ask |
 
 Pass `{headless_mode}` flag to all routes. Use Todo List to track progress through multi-step flows. Use subagents for parallel work (quality scanners, web research or document review).

@@ -40,7 +40,7 @@ This is the core creative path — where workflow and skill ideas become reality
 
 Workflows and skills span three types: simple utilities (composable building blocks), simple workflows (single-file processes), and complex workflows (multi-stage with routing and progressive disclosure). The build process includes a lint gate for structural validation. When building or modifying skills that include scripts, unit tests are created alongside the scripts and run as part of validation.
 
-Load `prompts/build-process.md` to begin.
+Load `build-process.md` to begin.
 
 ## Quality Optimizer
 
@@ -48,7 +48,7 @@ For workflows/skills that already work but could work *better*. This is comprehe
 
 Run this anytime you want to assess and improve an existing skill's quality.
 
-Load `prompts/quality-optimizer.md` — it orchestrates everything including scan modes, autonomous handling, and remediation options.
+Load `quality-optimizer.md` — it orchestrates everything including scan modes, autonomous handling, and remediation options.
 
 ---
 
@@ -56,8 +56,8 @@ Load `prompts/quality-optimizer.md` — it orchestrates everything including sca
 
 | Intent | Trigger Phrases | Route |
 |--------|----------------|-------|
-| **Build** | "build/create/design/convert/edit/fix a workflow/skill/tool" | Load `prompts/build-process.md` |
-| **Quality Optimize** | "quality check", "validate", "review/optimize/improve workflow/skill" | Load `prompts/quality-optimizer.md` |
+| **Build** | "build/create/design/convert/edit/fix a workflow/skill/tool" | Load `build-process.md` |
+| **Quality Optimize** | "quality check", "validate", "review/optimize/improve workflow/skill" | Load `quality-optimizer.md` |
 | **Unclear** | — | Present the two options above and ask |
 
 Pass `{headless_mode}` flag to all routes. Use TodoList tool to track progress through multi-step flows. Use AskUserQuestion tool when structuring questions for users. Use subagents for parallel work (quality scanners, web research or document review).
