@@ -98,6 +98,12 @@ When the setup skill runs, it merges these rows into the project-wide `_bmad/mod
 
 Both merge scripts use an anti-zombie pattern: before writing new values for a module, they remove all existing entries for that module's code. This prevents stale configuration or help entries from persisting across module updates. Running setup a second time is always safe.
 
+## Legacy Directory Cleanup
+
+After config data is migrated and individual files are cleaned up by the merge scripts, a separate cleanup step removes the installer's per-module directory trees from `_bmad/`. These directories contain skill files that are already installed at `.claude/skills/` — they are redundant once the config has been consolidated.
+
+Before removing any directory, the cleanup script verifies that every skill it contains exists at the installed location. Directories without skills (like `_config/`) are removed directly. The script is idempotent — running setup again after cleanup is safe.
+
 ## Design Guidance
 
 Configuration is for **basic, project-level settings** — output folders, language preferences, feature toggles. Keep the number of configurable values small.
