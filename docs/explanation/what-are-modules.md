@@ -3,20 +3,34 @@ title: 'What Are BMad Modules?'
 description: How agents and workflows combine into installable, configurable modules within the BMad ecosystem
 ---
 
-BMad modules package related agents and workflows into a cohesive, installable unit with shared configuration and help system registration.
+BMad modules package agents and workflows into installable units with shared configuration and help system registration. A module can be a full suite of related skills or a single standalone skill that wants to be discoverable and configurable.
+
+## Distribution: Plugins and Marketplaces
+
+At the distribution level, a BMad module is a **plugin** — a package of skills with a `.claude-plugin/` manifest. How you structure it depends on what you're shipping:
+
+| Structure           | When to Use                                                  | Manifest                                                  |
+| ------------------- | ------------------------------------------------------------ | --------------------------------------------------------- |
+| **Single plugin**   | One module (standalone or multi-skill)                       | `.claude-plugin/marketplace.json` with one plugin entry   |
+| **Marketplace**     | A repo that ships multiple modules                           | `.claude-plugin/marketplace.json` with multiple plugin entries |
+
+The `.claude-plugin/` convention originates from Claude Code, but the format works across all 43+ skills platforms supported by the upcoming BMad installer. You can also install directly using the NPX skill installer from Vercel, or through Anthropic's plugin system if targeting only Claude Code.
+
+The Module Builder generates the appropriate `marketplace.json` during the Create Module (CM) step - but you will want to verify it lists the proper relative paths to the skills you want to deliver with your module.
+
+This is very powerful also if you want to include remote URL skills in your own module to combine them.
 
 ## What a Module Contains
 
-A module is a folder of skills — agents and/or workflows — plus a **setup skill** that handles installation and configuration.
+| Component           | Multi-Skill Module                                      | Standalone Module                                          |
+| ------------------- | ------------------------------------------------------- | ---------------------------------------------------------- |
+| **Skills**          | Two or more agents/workflows                            | A single agent or workflow                                 |
+| **Registration**    | Dedicated `bmad-{code}-setup` skill                     | Built into the skill itself (`assets/module-setup.md`)     |
+| **module.yaml**     | In the setup skill's `assets/`                          | In the skill's own `assets/`                               |
+| **module-help.csv** | In the setup skill's `assets/`                          | In the skill's own `assets/`                               |
+| **Distribution**    | Plugin with multiple skill folders                      | Plugin with single skill folder + `marketplace.json`       |
 
-| Component           | Purpose                                                                               |
-| ------------------- | ------------------------------------------------------------------------------------- |
-| **Skills**          | The agents and workflows that deliver the module's capabilities                       |
-| **Setup skill**     | Collects user preferences, writes config, registers capabilities with the help system |
-| **module.yaml**     | Declares module identity and configurable variables                                   |
-| **module-help.csv** | Lists every capability users can discover and invoke                                  |
-
-The setup skill is the only required infrastructure. Everything else is just well-built skills that happen to work together.
+For multi-skill modules, the setup skill is the glue — it registers all capabilities in one step. For standalone modules, the skill handles its own registration on first run or when the user passes `setup`/`configure`.
 
 ## Agent vs. Workflow vs. Both
 
@@ -69,7 +83,9 @@ Modules register with a project through three files in `{project-root}/_bmad/`:
 | `config.user.yaml` | Personal settings (gitignored) — user name, language preferences       |
 | `module-help.csv`  | Capability registry — one row per action users can discover            |
 
-Not every module needs configuration. If skills work with sensible defaults, the setup skill can focus purely on help registration. See **[Module Configuration](/explanation/module-configuration.md)** for details on when configuration adds value.
+Registration is what makes a module visible to `bmad-help`. Without it, the help system cannot discover, recommend, or track completion of the module's capabilities.
+
+Not every module needs configuration. If skills work with sensible defaults, registration can focus purely on help entries. See **[Module Configuration](/explanation/module-configuration.md)** for details on when configuration adds value and how the help CSV columns work.
 
 ## External Dependencies
 
@@ -94,7 +110,7 @@ Not every module needs a UI. But for complex modules with many capabilities, a v
 The Module Builder (`bmad-module-builder`) provides three capabilities for the module lifecycle:
 
 1. **Ideate Module (IM)** — Brainstorm and plan through creative facilitation
-2. **Create Module (CM)** — Scaffold the setup skill into your skills folder
-3. **Validate Module (VM)** — Verify structural integrity and entry quality
+2. **Create Module (CM)** — Package skills as an installable module. Detects whether you have a folder of skills (generates a setup skill) or a single skill (embeds self-registration directly)
+3. **Validate Module (VM)** — Verify structural integrity and entry quality for both multi-skill and standalone modules
 
 See the **[Builder Commands Reference](/reference/builder-commands.md)** for detailed documentation on each capability.

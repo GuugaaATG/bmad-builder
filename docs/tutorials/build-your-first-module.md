@@ -15,9 +15,9 @@ Walk through the complete module lifecycle — from brainstorming an idea to sca
 
 :::note[Prerequisites]
 
-- BMad Builder module installed in your project (`bmad-builder-setup`)
+- BMad Builder module registered in your project (run `bmad-bmb-setup` on first use)
 - Familiarity with what agents and workflows are — see **[What Are Agents](/explanation/what-are-bmad-agents.md)** and **[What Are Workflows](/explanation/what-are-workflows.md)**
-  :::
+:::
 
 :::tip[Quick Path]
 Already have your skills built? Skip to **Step 3: Scaffold the Module** to package them. Just need to validate an existing module? Jump to **Step 4: Validate**.
@@ -25,14 +25,14 @@ Already have your skills built? Skip to **Step 3: Scaffold the Module** to packa
 
 ## Understanding Modules
 
-A BMad module is a folder of skills (agents and/or workflows) plus a setup skill that handles installation. The setup skill collects configuration, registers capabilities with the help system, and makes the module discoverable.
+A BMad module packages skills into a discoverable, configurable unit. The Module Builder offers two packaging approaches based on what you're building:
 
-| Component           | What It Does                                                    |
-| ------------------- | --------------------------------------------------------------- |
-| **Your skills**     | Agents and workflows that deliver the module's value            |
-| **Setup skill**     | Generated infrastructure — config collection, help registration |
-| **module.yaml**     | Module identity and configurable variables                      |
-| **module-help.csv** | Capability entries for the help system                          |
+| Approach              | When to Use                                  | What Gets Generated                                             |
+| --------------------- | -------------------------------------------- | --------------------------------------------------------------- |
+| **Setup skill**       | Folder of 2+ skills                          | Dedicated `bmad-{code}-setup` skill with config and help assets |
+| **Self-registration** | Single standalone skill                      | Registration embedded in the skill's own `assets/` folder       |
+
+Both approaches produce the same result: `module.yaml` (identity and config variables) and `module-help.csv` (capability entries for the help system) that register with `bmad-help`.
 
 See **[What Are Modules](/explanation/what-are-modules.md)** for architecture decisions and design patterns.
 
@@ -77,15 +77,17 @@ Build and test each skill before scaffolding the module. The Create Module step 
 
 ## Step 3: Scaffold the Module
 
-Once all skills are built, run Create Module (CM) to scaffold the setup skill.
+Once your skills are built, run Create Module (CM) to package them.
 
 :::note[Example]
-**You:** "I want to create a module" or provide the path to your skills folder.
+**You:** "I want to create a module" or provide the path to your skills folder (or a single skill).
 
-**Builder:** Reads every skill, asks about module identity and capability ordering, then scaffolds the setup skill.
+**Builder:** Reads the skills, detects whether this is a multi-skill or single-skill module, confirms the approach, then scaffolds.
 :::
 
-The builder generates:
+### Multi-skill modules
+
+The builder generates a dedicated setup skill:
 
 ```
 your-skills-folder/
@@ -96,12 +98,31 @@ your-skills-folder/
 │   │   ├── merge-help-csv.py
 │   │   └── cleanup-legacy.py
 │   └── assets/
-│       ├── module.yaml          # Your module's identity and config vars
-│       └── module-help.csv      # Your module's capability entries
+│       ├── module.yaml          # Module identity and config vars
+│       └── module-help.csv      # Capability entries
 ├── your-agent-skill/
 ├── your-workflow-skill/
 └── ...
 ```
+
+### Standalone modules
+
+The builder embeds registration into the skill itself:
+
+```
+your-skill/
+├── SKILL.md                     # Updated with registration check
+├── assets/
+│   ├── module-setup.md          # Self-registration reference
+│   ├── module.yaml              # Module identity and config vars
+│   └── module-help.csv          # Capability entries
+├── scripts/
+│   ├── merge-config.py          # Config merge script
+│   └── merge-help-csv.py        # Help CSV merge script
+└── ...
+```
+
+A `.claude-plugin/marketplace.json` is also generated at the parent level for distribution.
 
 ## Step 4: Validate
 
@@ -122,20 +143,9 @@ Fix any findings and re-validate until clean.
 
 ## What You've Accomplished
 
-```
-your-module/
-├── bmad-{code}-setup/           # Installable setup skill
-│   ├── SKILL.md
-│   ├── scripts/
-│   └── assets/
-│       ├── module.yaml          # Module identity
-│       └── module-help.csv      # Capability registry
-├── skill-one/                   # Your built skills
-├── skill-two/
-└── ...
-```
+Your module is now a complete, distributable BMad module. For multi-skill modules, users run the setup skill to install. For standalone modules, the skill self-registers on first run.
 
-Your module is now a complete, distributable BMad module. To install it in any project, users run the setup skill.
+Either way, the module's capabilities are now discoverable through `bmad-help`, configuration is collected and persisted, and the module works within the BMad ecosystem.
 
 ## Quick Reference
 
@@ -159,7 +169,7 @@ Yes. Build the new skill, then re-run Create Module (CM) on the folder. The scaf
 
 ### What if my module only has one skill?
 
-A single agent or workflow can still be a module. The setup skill provides configuration and help registration. For very simple cases, a standalone skill with self-registration may be a better fit — see the agent or workflow builder for that pattern.
+The Module Builder handles this automatically. When you give it a single skill, it recommends the **standalone self-registering** approach — registration is embedded directly in the skill instead of generating a separate setup skill. The skill registers itself on first run or when the user passes `setup`/`configure`.
 
 ### Can my module extend another module?
 
@@ -173,5 +183,5 @@ Yes. During ideation or creation, specify that your module is an expansion. Your
 - **[Discord](https://discord.gg/gk8jAdXWmj)** — Community support
 
 :::tip[Key Takeaways]
-Plan first with Ideate Module (IM), build individual skills with the Agent and Workflow Builders, scaffold with Create Module (CM), and verify with Validate Module (VM). The setup skill handles the rest — config collection, help registration, and making your module installable.
+Plan first with Ideate Module (IM), build individual skills with the Agent and Workflow Builders, package with Create Module (CM), and verify with Validate Module (VM). For multi-skill modules, a setup skill handles registration. For single skills, registration is built in — no extra infrastructure needed.
 :::

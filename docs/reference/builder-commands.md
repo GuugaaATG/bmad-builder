@@ -230,11 +230,11 @@ The Module Builder (`bmad-module-builder`) handles module-level planning, scaffo
 
 ### Capabilities Overview
 
-| Capability          | Menu Code | What It Does                                                           |
-| ------------------- | --------- | ---------------------------------------------------------------------- |
-| **Ideate Module**   | IM        | Brainstorm and plan a module through creative facilitation             |
-| **Create Module**   | CM        | Scaffold a setup skill into an existing folder of built skills         |
-| **Validate Module** | VM        | Check structural integrity and entry quality of a module's setup skill |
+| Capability          | Menu Code | What It Does                                                                                                    |
+| ------------------- | --------- | --------------------------------------------------------------------------------------------------------------- |
+| **Ideate Module**   | IM        | Brainstorm and plan a module through creative facilitation                                                      |
+| **Create Module**   | CM        | Package skills as an installable module — setup skill for multi-skill, self-registration for standalone          |
+| **Validate Module** | VM        | Check structural integrity and entry quality for both multi-skill and standalone modules                        |
 
 ### Ideate Module (IM)
 
@@ -263,44 +263,47 @@ The plan document uses a resumable template with YAML frontmatter, so long brain
 
 ### Create Module (CM)
 
-Takes an existing folder of built skills and scaffolds a setup skill that makes it an installable BMad module. Supports `--headless` / `-H`.
+Packages built skills as an installable BMad module. Auto-detects single-skill vs. multi-skill input and recommends the appropriate approach. Supports `--headless` / `-H`.
 
-| Aspect          | Detail                                                        |
-| --------------- | ------------------------------------------------------------- |
-| **Interaction** | Guided or headless                                            |
-| **Input**       | Path to a skills folder, optional plan document               |
-| **Output**      | Setup skill (`bmad-{code}-setup/`) added to the skills folder |
+| Aspect          | Detail                                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------- |
+| **Interaction** | Guided or headless                                                                          |
+| **Input**       | Path to a skills folder or single skill (or SKILL.md file), optional plan document          |
+| **Output**      | Setup skill for multi-skill modules, or self-registration files for standalone modules      |
 
 **What it does:**
 
-1. Reads every SKILL.md in the folder to understand each skill
-2. Collects module identity (name, code, description, version, greeting)
-3. Defines help CSV entries — capabilities, menu codes, ordering, relationships
-4. Captures configuration variables and external dependencies
-5. Scaffolds the setup skill with generated `module.yaml` and `module-help.csv`
+1. Reads the SKILL.md files to understand each skill
+2. Detects single vs. multi-skill and confirms the packaging approach with the user
+3. Collects module identity (name, code, description, version, greeting)
+4. Defines help CSV entries — capabilities, menu codes, ordering, relationships
+5. Captures configuration variables and external dependencies
+6. Scaffolds the module infrastructure
 
-The scaffolded setup skill includes merge scripts, cleanup scripts, and a generic SKILL.md — only the asset files are customized per module.
+**Multi-skill output:** A dedicated `bmad-{code}-setup/` folder with merge scripts, cleanup scripts, and a generic SKILL.md.
+
+**Standalone output:** `assets/module-setup.md`, `assets/module.yaml`, and `assets/module-help.csv` embedded in the skill, plus merge scripts in `scripts/` and a `.claude-plugin/marketplace.json` for distribution. The skill's SKILL.md is updated to check for registration on activation.
 
 ### Validate Module (VM)
 
-Verifies that a module's setup skill is complete and accurate. Combines a deterministic validation script with LLM-based quality assessment.
+Verifies that a module's structure is complete and accurate. Auto-detects multi-skill modules (with setup skill) and standalone modules (with self-registration). Combines a deterministic validation script with LLM-based quality assessment.
 
-| Aspect          | Detail                             |
-| --------------- | ---------------------------------- |
-| **Interaction** | Interactive                        |
-| **Input**       | Path to the module's skills folder |
-| **Output**      | Validation report                  |
+| Aspect          | Detail                                                 |
+| --------------- | ------------------------------------------------------ |
+| **Interaction** | Interactive                                            |
+| **Input**       | Path to the module's skills folder or single skill     |
+| **Output**      | Validation report                                      |
 
 **Structural checks** (script-driven):
 
-| Check                 | What It Catches                                                         |
-| --------------------- | ----------------------------------------------------------------------- |
-| Setup skill structure | Missing SKILL.md, module.yaml, or module-help.csv                       |
-| Coverage              | Skills without CSV entries, orphan entries for nonexistent skills       |
-| Menu codes            | Duplicate codes across the module                                       |
-| References            | Before/after fields pointing to nonexistent capabilities                |
-| Required fields       | Missing skill name, display name, menu code, or description in CSV rows |
-| module.yaml           | Missing code, name, or description                                      |
+| Check                  | What It Catches                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------- |
+| Module structure       | Missing setup skill or standalone files (`module-setup.md`, merge scripts)                  |
+| Coverage               | Skills without CSV entries, orphan entries for nonexistent skills                           |
+| Menu codes             | Duplicate codes across the module                                                           |
+| References             | Before/after fields pointing to nonexistent capabilities                                    |
+| Required fields        | Missing skill name, display name, menu code, or description in CSV rows                     |
+| module.yaml            | Missing code, name, or description                                                          |
 
 **Quality assessment** (LLM-driven):
 

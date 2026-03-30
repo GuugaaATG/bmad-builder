@@ -29,7 +29,33 @@ BMad Builder lets you create:
 
 ## Quick Start
 
-_Detailed quick start guide coming soon._ In the meantime, invoke the **Agent Builder** or **Workflow Builder** skill and describe what you want to build. Both guide you through a six-phase conversational discovery and produce a ready-to-use skill folder.
+### 1. Register the Module
+
+On first use, run `bmad-bmb-setup` to register BMad Builder in your project. This collects your preferences (name, language, output paths) and registers the builder's capabilities with the help system so `bmad-help` can guide you.
+
+:::tip[Single-Skill Modules]
+If you install a module that contains only one skill, that skill handles its own registration on first run — no separate setup step needed.
+:::
+
+### 2. Build Something
+
+Invoke the **Agent Builder** or **Workflow Builder** and describe what you want to create. Both guide you through conversational discovery and produce a ready-to-use skill folder.
+
+| Goal                      | Builder          | Menu Code |
+| ------------------------- | ---------------- | --------- |
+| AI companion with memory  | Agent Builder    | BA        |
+| Structured process / tool | Workflow Builder | BW        |
+| Package skills as module  | Module Builder   | CM        |
+
+### 3. Use Your Skill
+
+The builders produce a complete skill folder. To use it, copy the folder into your AI tool's skills directory — for Claude Code that's `.claude/skills/` at project scope or `~/.claude/skills/` at user scope. For other tools, ask your AI agent where skills are installed or consult the tool's documentation.
+
+:::tip[No Module Required]
+If you're building something for personal use or just testing it out, you don't need to package it as a module. Copy the skill folder, use it directly. Module packaging (with `bmad-help` registration and configuration) is for when you want to share or need richer discoverability.
+:::
+
+### 4. Learn More
 
 See the [Builder Commands Reference](/reference/builder-commands.md) for all capabilities, modes, and phases.
 

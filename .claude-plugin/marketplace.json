@@ -11,13 +11,14 @@
     {
       "name": "bmad-builder",
       "source": "./",
-      "description": "Build AI agents, workflows, and modules from a conversation. Three skills — Agent Builder, Workflow Builder, and Module Builder — guide you from idea to production-ready skill structure with built-in quality optimization. Part of the BMad Method ecosystem.",
-      "version": "1.3.0",
+      "description": "Build AI agents, workflows, and modules from a conversation. Four skills — Agent Builder, Workflow Builder, Module Builder, and Setup — guide you from idea to production-ready skill structure with built-in quality optimization. Part of the BMad Method ecosystem.",
+      "version": "1.4.0",
       "author": {
         "name": "Brian (BMad) Madison"
       },
       "skills": [
         "./skills/bmad-agent-builder",
+        "./skills/bmad-bmb-setup",
         "./skills/bmad-module-builder",
         "./skills/bmad-workflow-builder"
       ]
