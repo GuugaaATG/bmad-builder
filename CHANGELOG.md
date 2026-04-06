@@ -1,5 +1,49 @@
 # Changelog
 
+## [1.5.0] - 2026-04-06
+
+### 💥 Breaking Changes
+
+* **Agent builder output structure** — Builder now produces three distinct agent types (stateless, memory, autonomous) with different scaffolding per type. Stateless agents retain the familiar full-identity SKILL.md; memory and autonomous agents use a lean bootloader with sanctum architecture
+* **bmad- prefix reserved** — The `bmad-` prefix is now reserved for official BMad ecosystem skills only. User-created skills use `agent-{name}` (standalone) or `{code}-agent-{name}` (module). Convert mode preserves existing prefixes unless the user requests a rename
+
+### 🎁 Features
+
+* **Agent personalization architecture** — Three agent types along a spectrum: stateless (no memory), memory (sanctum with First Breath initialization), and autonomous (memory + PULSE for background operation). Builder detects the right type through natural conversation during Phase 1
+* **Sanctum memory system** — Memory agents persist through six core files (INDEX, PERSONA, CREED, BOND, MEMORY, CAPABILITIES) loaded on every session rebirth. Two-tier memory: raw session logs for capture, curated MEMORY.md (capped at 200 lines) for long-term knowledge
+* **First Breath initialization** — Two styles for agent onboarding: calibration (deep conversational discovery for creative partners) and configuration (efficient guided setup for domain experts). Saves to sanctum files during the conversation, not in batch
+* **PULSE autonomous wake** — Autonomous agents wake on schedule to curate memory, prune old session logs, and run domain-specific tasks. Supports named task routing via `--headless {task-name}`
+* **Evolvable capabilities** — Memory agents can optionally learn new capabilities over time. Users teach the agent new prompt-based, script-based, or multi-file capabilities that persist in the sanctum
+* **Template processing script** — New `process-template.py` for parameterized sanctum template seeding with agent type conditionals and init script parameters
+* **New sample agents** — bmad-agent-creative-muse (memory, calibration), bmad-agent-code-coach (autonomous), bmad-agent-sentinel (autonomous), bmad-agent-diagram-reviewer (stateless)
+
+### 🐛 Bug Fixes
+
+* Fix quality scanner false positives on memory agents — prepass now detects bootloader architecture via Sacred Truth markers and sanctum templates, outputs `is_memory_agent` flag for all five LLM scanners
+* Fix report creator for bootloader agents — reads identity seed and CREED philosophy from sanctum templates instead of missing SKILL.md sections
+* Fix naming validation in workflow builder — remove enforced `bmad-` prefix check that rejected valid user-created skill names
+
+### ♻️ Refactoring
+
+* Move builder process and quality scan files into `references/` subdirectory for both agent and workflow builders
+* Unify agent memory terminology — replace "sidecar" with direct memory references across all builders, docs, and samples. Memory path convention updated from `{skillName}-sidecar/` to `{skillName}/` for new builds
+* Restructure builder discovery phases for agent type awareness with new sequencing: type detection, relationship depth, evolvable capabilities, full memory requirements
+
+### 📚 Documentation
+
+* New explanation doc: "Agent Memory and Personalization" covering sanctum architecture, First Breath, two-tier memory, PULSE, and evolvable capabilities
+* Rewrite "What Are BMad Agents" for the three agent types with comparison tables and decision guidance
+* Expand "Builder Commands Reference" with agent type detection in Phase 1, persona memory requirements in Phase 2-3, and per-type build output structures
+* Add installer coming-soon notices — manual copy instructions as current path, BMad installer as upcoming
+* Update module docs to reference agent type spectrum and new naming conventions
+* Add module contribution guide with ecosystem cross-links
+
+### 🔧 Maintenance
+
+* Bump version to 1.5.0 across package.json and marketplace.json
+* Update docs theme to Ghost blog design tokens (Inter/Space Grotesk/JetBrains Mono, dark palette)
+* Add Python 3.10+ and `uv` as documented prerequisites
+
 ## [1.4.0] - 2026-03-29
 
 ### 🎁 Features
