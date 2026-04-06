@@ -45,6 +45,19 @@ Include all pre-pass findings in your output, preserved as-is. These are determi
 
 ---
 
+## Memory Agent Bootloader Awareness
+
+Check the pre-pass JSON for `metadata.is_memory_agent`. If `true`, this is a memory agent with a lean bootloader SKILL.md. Adjust your expectations:
+
+- **Do NOT flag missing Overview, Identity, Communication Style, or Principles sections.** Bootloaders intentionally omit these. Identity is a free-flowing seed paragraph (not a formal section). Communication style lives in PERSONA-template.md in `assets/`. Principles live in CREED-template.md.
+- **Do NOT flag missing memory-system.md, access-boundaries.md, save-memory.md, or init.md.** These are the old architecture. Memory agents use: `memory-guidance.md` (memory discipline), Dominion section in CREED-template.md (access boundaries), Session Close section in SKILL.md (replaces save-memory), `first-breath.md` (replaces init.md).
+- **Do NOT flag missing index.md entry point.** Memory agents batch-load 6 sanctum files directly on rebirth (INDEX, PERSONA, CREED, BOND, MEMORY, CAPABILITIES).
+- **DO check** that The Three Laws, The Sacred Truth, On Activation, and Session Close sections exist in the bootloader.
+- **DO check** that `references/first-breath.md` exists and that `assets/` contains sanctum templates. The sanctum architecture scanner (L7) handles detailed sanctum validation.
+- **Capability routing** for memory agents is in CAPABILITIES-template.md (in `assets/`), not in SKILL.md. Check there for the capability table.
+
+If `metadata.is_memory_agent` is `false`, apply the standard stateless agent checks below without modification.
+
 ## Part 2: Judgment-Based Assessment
 
 ### Description Quality

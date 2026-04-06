@@ -26,9 +26,22 @@ Read raw files for judgment calls:
 
 ---
 
+## Memory Agent Bootloader Awareness
+
+Check the pre-pass JSON for `is_memory_agent`. If `true`, adjust your SKILL.md craft assessment:
+
+- **Bootloaders are intentionally lean (~30-40 lines).** This is correct architecture, not over-optimization. Do NOT flag as "bare procedural skeleton", "missing or empty Overview", "no persona framing", or "over-optimized complex agent."
+- **The identity seed IS the persona framing** -- it's a 2-3 sentence personality DNA paragraph, not a formal `## Identity` section. Evaluate its quality as a seed (is it evocative? does it capture personality?) not its length.
+- **No Overview section by design.** The bootloader is the overview. Don't flag its absence.
+- **No Communication Style or Principles by design.** These live in sanctum templates (PERSONA-template.md, CREED-template.md in `assets/`). Read those files for persona context if needed for voice consistency checks.
+- **Capability prompts are in `references/`**, not at the skill root. The pre-pass now includes these. Evaluate them normally for outcome-focused craft.
+- **Config headers:** Memory agent capability prompts may not have `{communication_language}` headers. The agent gets language from BOND.md in its sanctum. Don't flag missing config headers in `references/` files as high severity for memory agents.
+
+For stateless agents (`is_memory_agent: false`), apply all standard checks below without modification.
+
 ## Part 1: SKILL.md Craft
 
-### The Overview Section (Required, Load-Bearing)
+### The Overview Section (Required for Stateless Agents, Load-Bearing)
 
 Every SKILL.md must start with an `## Overview` section. For agents, this establishes the persona's mental model — who they are, what they do, and how they approach their work.
 

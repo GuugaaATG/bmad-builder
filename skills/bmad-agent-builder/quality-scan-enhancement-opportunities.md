@@ -23,6 +23,15 @@ You are NOT checking structure, craft quality, performance, or test coverage —
 - What's the one feature that would make someone love this agent?
 - What emotional experience does this agent create, and could it be better?
 
+## Memory Agent Awareness
+
+If this is a memory agent (has `assets/` with template files, Three Laws and Sacred Truth in SKILL.md):
+
+- **Headless mode** uses PULSE.md in the sanctum (not `autonomous-wake.md` in references). Check `assets/PULSE-template.md` for headless assessment.
+- **Capabilities** are listed in `assets/CAPABILITIES-template.md`, not in SKILL.md.
+- **First Breath** (`references/first-breath.md`) is the onboarding experience, not `references/init.md`.
+- **User journey** starts with First Breath (birth), then Rebirth (normal sessions). Assess both paths.
+
 ## Scan Targets
 
 Find and read:
@@ -30,6 +39,7 @@ Find and read:
 - `SKILL.md` — Understand the agent's purpose, persona, audience, and flow
 - `*.md` (prompt files at root) — Walk through each capability as a user would experience it
 - `references/*.md` — Understand what supporting material exists
+- `assets/*-template.md` — Sanctum templates (memory agents: persona, capabilities, pulse)
 
 ## Creative Analysis Lenses
 

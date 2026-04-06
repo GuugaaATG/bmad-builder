@@ -18,12 +18,26 @@ Analyze the agent as a unified whole to identify:
 
 This is an **opinionated, advisory scan**. Findings are suggestions, not errors. Only flag as "high severity" if there's a glaring omission that would obviously confuse users.
 
+## Memory Agent Awareness
+
+Check if this is a memory agent (look for `assets/` with template files, or Three Laws / Sacred Truth in SKILL.md). Memory agents distribute persona across multiple files:
+
+- **Identity seed** in SKILL.md (2-3 sentence personality DNA, not a formal `## Identity` section)
+- **Communication style** in `assets/PERSONA-template.md`
+- **Values and principles** in `assets/CREED-template.md`
+- **Capability routing** in `assets/CAPABILITIES-template.md`
+- **Domain expertise** in `assets/BOND-template.md` (what the agent discovers about its owner)
+
+For persona-capability alignment, read BOTH the bootloader SKILL.md AND the sanctum templates in `assets/`. The persona is distributed, not concentrated in SKILL.md.
+
 ## Scan Targets
 
 Find and read:
 
-- `SKILL.md` — Identity, persona, principles, description
+- `SKILL.md` — Identity (full for stateless; seed for memory agents), description
 - `*.md` (prompt files at root) — What each prompt actually does
+- `references/*.md` — Capability prompts (especially for memory agents where all prompts are here)
+- `assets/*-template.md` — Sanctum templates (memory agents only: persona, values, capabilities)
 - `references/dimension-definitions.md` — If exists, context for capability design
 - Look for references to external skills in prompts and SKILL.md
 
