@@ -91,7 +91,7 @@ Every agent ships a `customize.toml` next to its `SKILL.md`. The metadata block 
 
 For memory and autonomous agents, the sanctum is the primary customization surface. Persona, creed, bond, and capabilities all live there and evolve with the owner. A `customize.toml` override surface would compete with that, so the default for those archetypes is opt-out.
 
-See [Customization for Authors](/explanation/customization-for-authors) for the decision guide, or [How to Customize BMad](https://bmadcode.github.io/bmad/how-to/customize-bmad) for the end-user view.
+See [Customization for Authors](/explanation/customization-for-authors.md) for the decision guide, or [How to Customize BMad](https://docs.bmad-method.org/how-to/customize-bmad/) for the end-user view.
 
 ## Building Agents
 

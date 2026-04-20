@@ -3,7 +3,7 @@ title: 'How to Make a Skill Customizable'
 description: Opt your skill into end-user customization during the build, name your scalars well, and test an override
 ---
 
-Use this guide when you're building a skill and you've decided (see [Customization for Authors](/explanation/customization-for-authors)) that end users should be able to override parts of its behavior without forking. You'll hit the opt-in moment in the builder, pick names for the scalars you expose, and verify an override actually works.
+This guide walks through opting a skill into end-user customization during a build. You'll hit the opt-in moment in the builder, pick names for the scalars you expose, and verify an override actually fires. Read [Customization for Authors](/explanation/customization-for-authors.md) first if you haven't decided whether to opt in.
 
 ## When to Use This
 
@@ -15,13 +15,13 @@ Use this guide when you're building a skill and you've decided (see [Customizati
 
 - Your skill is a single-purpose utility users will invoke and forget (overriding makes no sense)
 - You're building a memory or autonomous agent whose behavior lives in the sanctum (the sanctum is already the customization surface)
-- You haven't decided yet whether you need customization (read the [author guide](/explanation/customization-for-authors) first)
+- You haven't decided yet whether you need customization (read the [author guide](/explanation/customization-for-authors.md) first)
 
 :::note[Prerequisites]
 
 - The Agent Builder or Workflow Builder is available in your project
 - You've sketched what your skill does and roughly what stages or capabilities it has
-- You've read the [author guide](/explanation/customization-for-authors) and know which knobs you want to expose
+- You've read the [author guide](/explanation/customization-for-authors.md) and know which knobs you want to expose
 :::
 
 ## Steps
@@ -141,4 +141,4 @@ Users get:
 
 - **Ship one good default. Skip the booleans.** A flag like `include_combat_section` usually means you haven't decided what the skill does yet. Pick the default. Users who want a radically different shape can fork.
 - **Sentence-shaped variance belongs in `persistent_facts`.** Tone, house rules, and domain constraints are sentences the skill carries through the run. Don't enumerate them as scalars.
-- **Read [Customization for Authors](/explanation/customization-for-authors) first.** It gives you the three questions to ask for each candidate knob before you start Configurability Discovery.
+- **Read [Customization for Authors](/explanation/customization-for-authors.md) first.** It gives you the three questions to ask for each candidate knob before you start Configurability Discovery.

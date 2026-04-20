@@ -3,7 +3,7 @@ title: 'Customization for Authors'
 description: How to decide whether your skill should support end-user customization, and what to expose when it does
 ---
 
-Shipping a `customize.toml` is opt-in per skill. This is the author-side counterpart to [How to Customize BMad](https://bmadcode.github.io/bmad/how-to/customize-bmad), which covers the end-user view. Read that first if you haven't; it shows what users experience when they override a skill. This guide is about deciding whether to give them that surface at all.
+Shipping a `customize.toml` is opt-in per skill. This is the author-side counterpart to [How to Customize BMad](https://docs.bmad-method.org/how-to/customize-bmad/), which covers the end-user view. Read that first if you haven't; it shows what users experience when they override a skill. This guide is about deciding whether to give them that surface at all.
 
 ## The Problem
 
@@ -54,7 +54,7 @@ Opt in only when you have a specific org-level need the sanctum can't express. P
 
 A weekly session-prep workflow for tabletop RPG game masters. It reads the last session's log, reviews open campaign threads, drafts the scene spine, stats NPCs and encounters, and produces a GM notes document to run from.
 
-Here's how I'd customize it, field by field.
+Here's how to think about its customization surface, field by field.
 
 ### `persistent_facts` (default globs the campaign bible)
 
@@ -73,7 +73,7 @@ Every GM runs a different world. Without their campaign bible in context, the wo
 system_rules_template = "resources/dnd-5e-quick-reference.md"
 ```
 
-D&D 5e, Pathfinder 2e, and Call of Cthulhu reason about encounters in very different ways. A PF2e GM who overrides this with their own rules reference gets correctly-calibrated encounter math without the workflow pretending to know a system it doesn't. I'm not trying to catalog every RPG; I ship one default that covers most users and let everyone else swap in their own reference. The `*_template` suffix signals what changes if you touch it.
+D&D 5e, Pathfinder 2e, and Call of Cthulhu reason about encounters in very different ways. A PF2e GM who overrides this with their own rules reference gets correctly-calibrated encounter math without the workflow pretending to know a system it doesn't. The skill isn't trying to catalog every RPG; it ships one default that covers most users and lets everyone else swap in their own reference. The `*_template` suffix signals what changes if the user touches it.
 
 ### `session_notes_template` (scalar)
 
@@ -107,9 +107,9 @@ activation_steps_prepend = [
 
 Not every GM keeps session logs. The ones who do want the pre-load; the ones who don't would get a broken activation if it were baked in. Opt-in via the prepend hook lets both tables use the same skill.
 
-### What I'd NOT expose
+### What Not to Expose
 
-The stage sequence (recap, threads, spine, NPCs, notes) is the skill's identity. A GM who wants a very different flow (solo journaling, West Marches gossip round) should fork. Every stage I make optional erodes what the skill is.
+The stage sequence (recap, threads, spine, NPCs, notes) is the skill's identity. A GM who wants a very different flow (solo journaling, West Marches gossip round) should fork. Every stage made optional erodes what the skill is.
 
 Mechanical encounter math toggles like `auto_balance_cr` or `verbose_stat_blocks` stay out. The LLM handles those naturally once it has the system reference. Toggles here would amount to telling the executor how to do its job.
 
