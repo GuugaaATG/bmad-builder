@@ -1,6 +1,6 @@
 # Quality Dimensions — Quick Reference
 
-Seven dimensions to keep in mind when building agent skills. The quality scanners check these automatically during quality analysis — this is a mental checklist for the build phase.
+Eight dimensions to keep in mind when building agent skills, plus a ninth (Sanctum Architecture) specific to memory agents. The quality scanners check these automatically during quality analysis — this is a mental checklist for the build phase.
 
 ## 1. Outcome-Driven Design
 
@@ -57,7 +57,7 @@ Remove genuine waste (repetition, defensive padding, meta-explanation). Preserve
 
 Every agent ships `customize.toml` (metadata block is the install-time roster contract). The override surface beyond metadata is opt-in and archetype-sensitive.
 
-- **Metadata validity (all archetypes):** `[agent]` must include `code`, `title`, `icon`, `description`, `agent_type`. `name` is required for stateless agents and optional (empty string valid) for First-Breath-named memory/autonomous agents. SKILL.md must agree with customize.toml on identity fields.
+- **Metadata validity (all archetypes):** `[agent]` must include `code`, `title`, `icon`, `description`, `agent_type`. `name` is optional (empty string is valid); memory and autonomous agents whose name is learned during First Breath should leave it empty at build time. SKILL.md must agree with customize.toml on identity fields.
 - **Stateless opportunity test:** Does the agent load templates, write to paths, or have lifecycle points users will reasonably want to vary? Lift those to named scalars (`*_template`, `*_output_path`, `on_<event>`).
 - **Stateless abuse test:** Boolean toggles, opaque scalar names (`style_config`), more than two hooks, or arrays-of-tables without `code`/`id` keys are usually design smells.
 - **Memory/autonomous rule:** The sanctum is the primary customization surface. An override surface that duplicates PERSONA/CREED/BOND concepts (`identity`, `communication_style`, `principles`) is abuse. Default to metadata-only; opt in to the override surface only for narrow org-level needs (e.g. pre-sanctum compliance gate).

@@ -85,7 +85,7 @@ After scripts complete, spawn all applicable LLM scanners as parallel subagents.
 
 **For scanners WITH pre-pass (L1, L2, L3):** provide the pre-pass JSON file path so the scanner reads compact metrics first, then reads raw files only as needed for judgment calls.
 
-**For scanners WITHOUT pre-pass (L4, L5, L6):** provide just the skill path and output directory.
+**For scanners WITHOUT pre-pass (L4, L5, L6, L7):** provide just the skill path and output directory.
 
 Each subagent receives:
 

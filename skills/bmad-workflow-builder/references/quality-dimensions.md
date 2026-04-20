@@ -1,6 +1,6 @@
 # Quality Dimensions — Quick Reference
 
-Seven dimensions to keep in mind when building skills. The quality scanners check these automatically during quality analysis — this is a mental checklist for the build phase.
+Eight dimensions to keep in mind when building skills. The quality scanners check these automatically during quality analysis — this is a mental checklist for the build phase.
 
 ## 1. Outcome-Driven Design
 

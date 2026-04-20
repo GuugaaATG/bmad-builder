@@ -93,7 +93,7 @@ Ask the user about:
 
 ### 3.5. Populate the Agent Roster
 
-If any skills in the folder are agents (identified by a `customize.toml` with an `[agent]` block, or by the `agent-` prefix in their skill name), add them to `module.yaml` under an `agents:` key. Each entry carries the five install-time roster fields read from the agent's `[agent]` block:
+If any skills in the folder are agents (identified by a `customize.toml` with an `[agent]` block, or for legacy skills by an `agent-` segment anywhere in the skill name, e.g. `agent-foo` or `cis-agent-foo`), add them to `module.yaml` under an `agents:` key. Each entry carries the five install-time roster fields read from the agent's `[agent]` block:
 
 ```yaml
 agents:

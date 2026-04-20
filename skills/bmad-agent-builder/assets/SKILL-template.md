@@ -30,6 +30,13 @@ description: { skill-description } # [4-6 word summary]. [trigger phrases]
 - {Guiding principle 2}
 - {Guiding principle 3}
 
+## Conventions
+
+- Bare paths (e.g. `references/guide.md`) resolve from the skill root.
+- `{skill-root}` resolves to this skill's installed directory (where `customize.toml` lives).
+- `{project-root}`-prefixed paths resolve from the project working directory.
+- `{skill-name}` resolves to the skill directory's basename.
+
 ## On Activation
 
 {if-customizable}
@@ -45,7 +52,7 @@ Execute each entry in `{agent.activation_steps_prepend}` in order before proceed
 
 ### Step 3: Load Persistent Facts
 
-Treat every entry in `{agent.persistent_facts}` as foundational context for the session. Entries prefixed `file:` are paths or globs — load the referenced contents as facts. All other entries are facts verbatim.
+Treat every entry in `{agent.persistent_facts}` as foundational context for the session. Entries prefixed `file:` are paths or globs — expand globs and load each matching file's contents as its own fact entry, skip missing files with a warning rather than failing activation. All other entries are facts verbatim.
 
 ### Step 4: Load Config
 

@@ -82,7 +82,7 @@ uv run ./scripts/prepass-sanctum-architecture.py {skill-path} -o {report-dir}/sa
 After scripts complete, spawn all scanners as parallel subagents.
 
 **With pre-pass (L1, L2, L3, L7):** provide pre-pass JSON path.
-**Without pre-pass (L4, L5, L6):** provide skill path and output directory.
+**Without pre-pass (L4, L5, L6, L8):** provide skill path and output directory.
 
 **Memory agent check:** Read `sanctum-architecture-prepass.json`. If `is_memory_agent` is `true`, include L7 in the parallel spawn. If `false`, skip L7.
 

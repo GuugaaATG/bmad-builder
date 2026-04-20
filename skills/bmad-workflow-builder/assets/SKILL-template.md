@@ -9,6 +9,13 @@ description: { skill-description } # [5-8 word summary]. [trigger phrases, e.g. 
 
 {overview — concise: what it does, args supported, and the outcome for the singular or different paths. This overview needs to contain succinct information for the llm as this is the main provision of help output for the skill.}
 
+## Conventions
+
+- Bare paths (e.g. `references/guide.md`) resolve from the skill root.
+- `{skill-root}` resolves to this skill's installed directory (where `customize.toml` lives).
+- `{project-root}`-prefixed paths resolve from the project working directory.
+- `{skill-name}` resolves to the skill directory's basename.
+
 ## On Activation
 
 {if-customizable}

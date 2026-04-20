@@ -43,7 +43,7 @@ The builder proposes candidates auto-detected from your skill design and asks wh
 - **Templates** the skill loads (strongest case)
 - **Output destination paths** if the skill writes artifacts
 - **`on_<event>` hooks** (prompts or commands executed at lifecycle points)
-- **Additional persistent facts** beyond the default campaign-context glob
+- **Additional persistent facts** beyond the default `project-context.md` glob
 
 For each candidate you accept, the builder asks for a name and a default value.
 
@@ -68,7 +68,7 @@ Every scalar you expose needs a default that works on first run. Bare paths reso
 brief_template = "resources/brief-template.md"   # ships inside the skill
 on_complete = ""                                  # no default post-hook
 persistent_facts = [
-  "file:{project-root}/**/campaign-context.md",   # glob into the user's project
+  "file:{project-root}/**/project-context.md",    # glob into the user's project
 ]
 ```
 

@@ -199,7 +199,7 @@ Before completing the build, both builders run deterministic validation.
 
 | Script                   | What It Checks                                                                            |
 | ------------------------ | ----------------------------------------------------------------------------------------- |
-| `scan-path-standards.py` | Path conventions: no `{skill-root}`, `{project-root}` for project-scope, `./` for skill-internal, no double-prefix  |
+| `scan-path-standards.py` | Path conventions: `{project-root}` for project-scope, `./` for same-folder references, bare paths for cross-directory skill-internal, no double-prefix        |
 | `scan-scripts.py`        | Script portability, PEP 723 metadata, agentic design, unit test presence                  |
 
 Critical issues block completion. Warnings are noted but don't block.

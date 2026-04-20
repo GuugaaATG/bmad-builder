@@ -65,7 +65,14 @@ Consumed by the installer to populate `module.yaml:agents[]` and the central con
 | `description` | string | yes      | One-sentence summary of what the agent does.                          |
 | `agent_type`  | string | yes      | One of `stateless`, `memory`, `autonomous`.                           |
 
-**First-Breath-named agents:** leave `name = ""` at build time. The owner fills it post-activation by adding `[agents.<code>] name = "..."` to `{project-root}/_bmad/custom/config.toml`. UIs tolerate empty `name` and fall back to `title`.
+**First-Breath-named agents:** leave `name = ""` at build time. The owner fills it post-activation in `{project-root}/_bmad/custom/config.toml`:
+
+```toml
+[agents.<code>]
+name = "..."
+```
+
+UIs tolerate empty `name` and fall back to `title`.
 
 ### Override surface (emitted only when opted in)
 
