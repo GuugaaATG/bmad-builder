@@ -1,5 +1,43 @@
 # Changelog
 
+## [1.6.0] - 2026-04-20
+
+### 🎁 Features
+
+* **Customize.toml support across all builders** — Workflow Builder, Agent Builder, and Module Builder now emit skills that participate in BMad's per-skill customization model. Workflow Builder gains an opt-in Configurability Discovery phase; Agent Builder always emits an `[agent]` metadata block plus an optional override surface; Module Builder reads agent metadata during create and populates `module.yaml:agents[]` roster
+* **Customization-surface quality scanner** — New `quality-scan-customization-surface.md` in both agent and workflow builders audits opportunities (hardcoded templates, missing defaults, unlifted variance) and abuse patterns (boolean toggle farms, identity leaks, sanctum conflicts on memory agents)
+* **Agent metadata contract** — First-Breath-named agents can ship with an empty `name` field, populated by the owner post-activation via `_bmad/custom/config.toml`. Stateless, memory, and autonomous agents all emit roster-ready metadata
+* **Module roster validation** — `validate-module.md` now checks agent roster validity and flags drift between `module.yaml` and each agent's own `customize.toml`
+* **bmad-help integration** — Added `_meta` row to `skills/module-help.csv` registering `https://bmad-builder-docs.bmad-method.org/llms.txt`, enabling bmad-help to fetch Builder docs contextually
+* **Sample module setup skill** — New `sample-module-setup` skill lets all six sample skills (code coach, creative muse, diagram reviewer, dream weaver, sentinel, excalidraw) install as a collective BMad module (code: `sam`) with module.yaml, six-entry module-help.csv, and standard merge/cleanup scripts
+* **Dream Weaver standalone plugin** — `bmad-dream-weaver-agent` registered as a standalone marketplace entry, enabling independent discovery and installation alongside the sample-plugins bundle
+
+### 🐛 Bug Fixes
+
+* **BMB skill config fallback** — Agent, Workflow, and Module Builders now fall back to `_bmad/bmb/config.yaml` (legacy per-module format) when unified config files (`_bmad/config.yaml`, `_bmad/config.user.yaml`) do not exist, fixing config resolution for older installer setups
+* **Setup skill template YAML frontmatter** — Fixed invalid YAML frontmatter in emitted setup-skill templates (#55)
+* **Quality scanner self-containment** — Removed hardcoded absolute-path `Load` directives from customization-surface scanners. Scanners now rely solely on embedded lens tables, matching the convention of all other `quality-scan-*.md` files
+* **Marketplace source paths** — Corrected source paths for `sample-plugins` and `bmad-dream-weaver-agent` entries in `marketplace.json`
+
+### 📚 Documentation
+
+* **Customization authoring guide** — New `docs/explanation/customization-for-authors.md` decision guide with full worked example (bmad-session-prep for tabletop RPG GM workflow)
+* **Customization how-to** — New `docs/how-to/make-a-skill-customizable.md` with procedural steps for opt-in moment, scalar naming, default setup, and override testing
+* **Path conventions in emitted skills** — `SKILL-template.md` and `SKILL-template-bootloader.md` now include a `## Conventions` block documenting path tokens: bare paths, `{skill-root}`, `{project-root}`, `{skill-name}`
+* **Removed `{skill-root}` restriction** — Dropped "never use `{skill-root}`" guidance from `builder-commands.md` and `skill-authoring-best-practices.md`. The token is supported; authors decide based on their use case
+* **Updated installer messaging** — Replaced stale "coming soon" and GitHub-only references in `what-are-modules.md`, `distribute-your-module.md`, and `index.md` with current capabilities: any Git host (GitHub, GitLab, Bitbucket, self-hosted) and local paths via `--custom-source` (#71)
+* **Cross-linked customization docs** — Added cross-links from five existing explanation docs (what-are-bmad-agents, what-are-workflows, agent-memory-and-personalization, module-configuration, skill-authoring-best-practices)
+* **Module config clarity** — Clarified that authors still write `module.yaml` as source of truth; the installer flows module-level answers and agents roster into `_bmad/config.toml` at project root, aligning with BMAD-METHOD central config
+
+### 🔧 Maintenance
+
+* Bump bmad-builder version to 1.6.0 across `package.json` and `marketplace.json`
+* Bump sample-plugins to 1.1.0 in `marketplace.json` to reflect the new `sample-module-setup` skill
+* Replace "opt-out by default" with "disabled by default" for `customize.toml` override surface on memory/autonomous agents
+* Update three end-user-guide links from `bmadcode.github.io/bmad` to `docs.bmad-method.org/how-to/customize-bmad/`
+* Append `.md` to twelve internal cross-links throughout docs to match site convention
+* CI: prettier, markdownlint, and docs validator unblocks for PR #76
+
 ## [1.5.0] - 2026-04-06
 
 ### 💥 Breaking Changes
