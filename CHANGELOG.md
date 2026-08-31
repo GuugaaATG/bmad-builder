@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.2.2] - 2026-08-30
+
+### 🐛 Fixes
+
+- **The builders pass `--project-root`, and stop teaching the omission forward** (#116). `resolve_customization.py` worked out the project root by itself when the flag was absent, walking up from the skill's installed directory. For a skill installed under your home directory that walk reaches `~`, and a user-level BMad install leaves a `~/_bmad` sitting there — so the resolver decided home was the project, found no override, and returned shipped defaults. A team override in the actual project was never opened, and nothing reported it.
+
+  Three of the six files changed here are the templates the builders stamp into every new skill — `bmad-agent-builder`'s `SKILL-template.md` and `SKILL-template-bootloader.md`, and `bmad-workflow-builder`'s `SKILL-template.md`. Left alone, the omission kept seeding itself into everything built from here on, which is why this matters more than five call sites suggests. The builders' own activation steps and the `make-a-skill-customizable` recipe are covered too; that recipe runs from the project directory with a relative path, so it passes `"$PWD"` rather than the `{project-root}` placeholder the templates use.
+
+  The resolver itself is fixed upstream in [BMAD-METHOD#2802](https://github.com/bmad-code-org/BMAD-METHOD/pull/2802), which is what repairs an existing install — this repo ships no copy of the script and calls core's.
+
+- **`scan-path-standards.py` stops reporting the agent builder's own operational files** (#113). `pathlib` glob does not exclude dotfiles the way shell globbing does, so `skill_path.glob('*.md')` picked up the root `.memlog.md` that `bmad-agent-builder/SKILL.md` requires for resume detection, and reported a high-severity "Prompt file at skill root" finding on every run. The recursive scan also descended into generated `.analysis/<timestamp>/` output, where `findings.json` has to contain absolute paths and therefore tripped the absolute-path rule. `.memlog.md` is now exempt from the root-file structure rule, `.analysis` is filtered from the recursive scan and added to the prepass skip list. Measured on a sample agent: 8 findings down to 5.
+
+- **CodeQL code-quality findings cleared in the Python builder skills** (#106). Five findings that consumer repos inherited after installing BMad Builder skills. Adjacent string literals inside list displays are merged into single literals — generated `CAPABILITIES.md` output is byte-identical before and after, verified across every evolvable/capabilities combination, and the same change lands in the three sample `init-sanctum.py` copies that shared the pattern. Three intentional empty `except` blocks gained explanatory comments with no control-flow change, and an unused `import sys` is gone from `test_canon_sync.py`.
+
+### 🔧 Maintenance
+
+- **Marketplace plugin versions synced to 2.2.2** — nothing in the release workflow touches `.claude-plugin/marketplace.json`, so its versions drift from `package.json` unless bumped by hand.
+
 ## [2.2.1] - 2026-08-16
 
 ### 🐛 Fixes
